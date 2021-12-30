@@ -1,63 +1,39 @@
 package main
 
 import (
-	`errors`
-
-	`github.com/storezhang/glog`
-	`github.com/storezhang/gox/field`
+	`github.com/storezhang/simaqian`
 )
-
-var notSupportLang = errors.New("不支持的语言")
 
 func main() {
 	var err error
 	// 有错误，输出错误日志
-	var logger glog.Logger
-	if logger, err = glog.New(); nil != err {
+	var logger simaqian.Logger
+	if logger, err = simaqian.New(); nil != err {
 		panic(err)
 	}
 
 	// 取各种参数
 	conf := new(config)
-	conf.lang = lang(env(`LANG`))
-	conf.filepath = env(`FILEPATH`)
-	conf.version = env(`VERSION`)
-	conf.dependencies = parseMoules(`DEPENDENCIES`)
-	conf.replaces = parseReplaces(`REPLACES`)
-	defaults.SetDefaults(conf)
+	defer func() {
+		log(conf, logger, err)
+	}()
+	if err = conf.load(); nil != err {
+		return
+	}
 
 	// 记录配置日志信息
-	logger.Info(
-		`加载配置完成`,
-		field.String(`lang`, string(conf.lang)),
-		field.String(`filepath`, conf.filepath),
-		field.String(`version`, conf.version),
-		field.Strings(`dependencies`, conf.dependencyStrings()...),
-		field.Strings(`replaces`, conf.replaceStrings()...),
-	)
+	logger.Info(`加载配置完成`, conf.Fields()...)
 
-	switch conf.lang {
-	case langGo:
-		fallthrough
-	case langGolang:
-		err = golang(conf, logger)
-	case langJavascript:
-		fallthrough
-	case langJs:
-		err = js(conf, logger)
-	case langDart:
-		err = dart(conf, logger)
-	case langMaven:
-		err = maven(conf, logger)
-	case langGradle:
-		err = gradle(conf, logger)
-	default:
-		err = notSupportLang
+	// 更新依赖
+	if err = tidy(conf, logger); nil != err {
+		return
 	}
-
-	if nil != err {
-		logger.Fatal(`修改模块描述文件失败`, field.Error(err))
-	} else {
-		logger.Info(`修改模块描述文件成功`, field.String(`filepath`, conf.filepath))
+	// 代码检查
+	if conf.Lint {
+		if err = linter(conf, logger); nil != err {
+			return
+		}
 	}
+	// 编译
+	err = build(conf, logger)
 }
