@@ -1,4 +1,4 @@
-module github.com/storezhang/drone-protobuf
+module github.com/dronestock/protobuf
 
 go 1.17
 
