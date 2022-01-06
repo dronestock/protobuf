@@ -6,13 +6,9 @@ import (
 	`strings`
 )
 
-// 兼容Drone插件和普通使用
-// 优先使用普通模式
-// 没有配置再加载Drone配置
-func env(envs ...string) (config string) {
-	for _, _env := range envs {
-		_env = strings.ToUpper(_env)
-		if config = eval(_env); "" != config {
+func parseEnvs(envs ...string) (err error) {
+	for _, env := range envs {
+		if err = parseStrings(env); nil != err {
 			return
 		}
 	}
@@ -20,15 +16,29 @@ func env(envs ...string) (config string) {
 	return
 }
 
-func eval(config string) (final string) {
-	defer func() {
-		final = os.ExpandEnv(final)
-	}()
-
-	if final = os.Getenv(fmt.Sprintf("PLUGIN_%s", config)); "" != config {
+func parseStrings(env string) (err error) {
+	if err = parseValues(env); nil != err {
 		return
 	}
-	if final = os.Getenv(final); "" != final {
+	err = parseValues(fmt.Sprintf(`PLUGIN_%s`, env))
+
+	return
+}
+
+func parseValues(env string) (err error) {
+	values := strings.Split(os.Getenv(env), `,`)
+	converts := make([]string, 0, len(values))
+	for _, value := range values {
+		if `` == value {
+			continue
+		}
+		converts = append(converts, fmt.Sprintf(`"%s"`, value))
+	}
+
+	if 0 == len(converts) {
+		return
+	}
+	if err = os.Setenv(env, fmt.Sprintf(`[%s]`, strings.Join(converts, `,`))); nil != err {
 		return
 	}
 

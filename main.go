@@ -24,16 +24,14 @@ func main() {
 	// 记录配置日志信息
 	logger.Info(`加载配置完成`, conf.Fields()...)
 
-	// 更新依赖
-	if err = tidy(conf, logger); nil != err {
+	// 配置
+	if err = setup(conf, logger); nil != err {
 		return
 	}
-	// 代码检查
-	if conf.Lint {
-		if err = linter(conf, logger); nil != err {
-			return
-		}
+	// 推拉代码
+	if conf.pull() {
+		err = pull(conf, logger)
+	} else {
+		err = push(conf, logger)
 	}
-	// 编译
-	err = build(conf, logger)
 }
