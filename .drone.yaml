@@ -14,7 +14,7 @@ trigger:
 
 
 environment:
-  GOPROXY: https://goproxy.cn
+    GOPROXY: https://goproxy.cn,https://mirrors.aliyun.com/goproxy,https://goproxy.io,direct
 
 
 steps:
@@ -22,32 +22,11 @@ steps:
     image: plugins/git
     pull: if-not-exists
 
-  - name: 清理依赖
-    image: golang
-    pull: if-not-exists
-    volumes:
-      - name: deps
-        path: /go
-    commands:
-      - go mod tidy
-
-  - name: 代码检查
-    image: golangci/golangci-lint
-    pull: if-not-exists
-    volumes:
-      - name: deps
-        path: /go
-    commands:
-      - golangci-lint run --timeout 10m -E goerr113 -E nlreturn -E bodyclose -E rowserrcheck -E gosec -E unconvert -E misspell -E lll
-
-  - name: 编译
-    image: golang
-    pull: if-not-exists
-    volumes:
-      - name: deps
-        path: /go
-    commands:
-      - CGO_ENABLED=0 GOOS=linux go build -o mcu
+  -   name: 编译
+      image: dronestock/pangu
+      pull: if-not-exists
+      settings:
+          output: protobuf
 
   - name: 打包Docker并推送
     image: plugins/docker
@@ -56,16 +35,11 @@ steps:
         - develop
         - master
     settings:
-      repo: storezhang/mcu
+        repo: dronestock/protobuf
       tags:
         - latest
-      purge: true
       compress: true
       mirror: https://docker.mirrors.ustc.edu.cn
-      username: storezhang
+        username: dronestock
       password:
         from_secret: token_docker
-
-volumes:
-  - name: deps
-    temp: { }
