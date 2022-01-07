@@ -1,11 +1,12 @@
-![](https://github.com/TheThingsIndustries/docker-protobuf/workflows/Docker%20Image/badge.svg)
+# Protobuf
 
-# Protocol Buffers + Docker
+`Drone`持续集成`Protobuf`插件，功能有
 
-A lightweight `protoc` Docker image. It started out as https://github.com/znly/docker-protobuf fork, but grew into a
-stand-alone project.
+- 集成各种常见的语言
+- 默认配置
+- 支持`Golang`自定义标签
 
-## What's included:
+## 包含
 
 - [ckaznocha/protoc-gen-lint](https://github.com/ckaznocha/protoc-gen-lint)
 - [danielvladco/go-proto-gql](https://github.com/danielvladco/go-proto-gql)
@@ -29,7 +30,7 @@ stand-alone project.
 - [TheThingsIndustries/protoc-gen-fieldmask](https://github.com/TheThingsIndustries/protoc-gen-fieldmask)
 - [TheThingsIndustries/protoc-gen-gogottn](https://github.com/TheThingsIndustries/protoc-gen-gogottn)
 
-## Supported languages
+## 支持语言
 
 - C
 - C#
@@ -45,15 +46,3 @@ stand-alone project.
 - Rust
 - Swift
 - Typescript
-
-## Usage
-
-```
-$ docker run --rm -v<some-path>:<some-path> -w<some-path> thethingsindustries/protoc [OPTION] PROTO_FILES
-```
-
-For help try:
-
-```
-$ docker run --rm thethingsindustries/protoc --help
-```
