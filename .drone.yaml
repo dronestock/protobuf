@@ -13,20 +13,16 @@ trigger:
       - pull_request
 
 
-environment:
-    GOPROXY: https://goproxy.cn,https://mirrors.aliyun.com/goproxy,https://goproxy.io,direct
-
-
 steps:
   - name: 拉代码
     image: plugins/git
     pull: if-not-exists
 
-  -   name: 编译
+  - name: 编译
       image: dronestock/pangu
       pull: if-not-exists
       settings:
-          output: protobuf
+        output: protobuf
 
   - name: 打包Docker并推送
     image: plugins/docker
@@ -35,11 +31,11 @@ steps:
         - develop
         - master
     settings:
-        repo: dronestock/protobuf
+      repo: dronestock/protobuf
       tags:
         - latest
       compress: true
       mirror: https://docker.mirrors.ustc.edu.cn
-        username: dronestock
+      username: dronestock
       password:
         from_secret: token_docker
