@@ -10,7 +10,7 @@ func inject(conf *config, logger simaqian.Logger) (err error) {
 		case typeGo:
 			fallthrough
 		case typeGogo:
-			err = golang(output)
+			err = golang(conf, output, logger)
 		}
 	}
 

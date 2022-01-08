@@ -1,4 +1,4 @@
-FROM golang:alpine AS builder
+FROM golang:alpine AS gtag
 
 
 # 标签修改程序版本
@@ -6,6 +6,8 @@ ENV TAG_VERSION 1.3.0
 
 # 安装标签处理程序
 RUN go install github.com/favadi/protoc-go-inject-tag@v${TAG_VERSION}
+
+
 
 
 
@@ -19,7 +21,7 @@ LABEL Description="Drone持续集成Protobuf插件，集成所有常见的Protob
 
 
 # 复制文件
-COPY --from=builder /go/bin/protoc-go-inject-tag /usr/bin/gotag
+COPY --from=gtag /go/bin/protoc-go-inject-tag /usr/bin/gtag
 COPY protobuf /bin
 
 

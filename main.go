@@ -24,5 +24,12 @@ func main() {
 	// 记录配置日志信息
 	logger.Info(`加载配置完成`, conf.Fields()...)
 
-	err = build(conf, logger)
+	// 编译
+	if err = build(conf, logger); nil != err {
+		return
+	}
+	// 处理编译后的文件
+	if err = inject(conf, logger); nil != err {
+		return
+	}
 }
