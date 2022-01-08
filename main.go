@@ -25,7 +25,7 @@ func main() {
 	logger.Info(`加载配置完成`, conf.Fields()...)
 
 	// 编译
-	if err = build(conf, logger); nil != err {
+	if err = builds(conf, logger); nil != err {
 		return
 	}
 	// 处理编译后的文件

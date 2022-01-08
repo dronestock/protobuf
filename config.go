@@ -11,22 +11,20 @@ import (
 )
 
 type config struct {
-	// 类型
-	Type string `default:"${PLUGIN_TYPE=${TYPE=go}}" validate:"required_without=Types,oneof=go golang java javascript dart"`
+	// 语言
+	Lang string `default:"${PLUGIN_LANG=${LANG=go}}" validate:"required_without=Inputs,oneof=go golang java javascript dart"`
 	// 输入目录
 	Input string `default:"${PLUGIN_INPUT=${INPUT=.}}"`
 	// 输出目录
 	Output string `default:"${PLUGIN_OUTPUT=${OUTPUT=.}}"`
 
-	// 类型列表
-	Types []string `default:"${PLUGIN_TYPES=${TYPES}}" validate:"required_without=Type,dive,oneof=go golang java javascript dart"`
 	// 输入目录列表
 	Inputs []string `default:"${PLUGIN_INPUTS=${INPUTS}}" validate:"required_without=Input"`
 	// 输出目录列表
 	Outputs []string `default:"${PLUGIN_OUTPUTS=${OUTPUTS}}" validate:"required_without=Output"`
 
 	// 第三方库列表
-	Includes []string `default:"${PLUGIN_INCLUDES=${INCLUDES}}"`
+	Includes []string `default:"${PLUGIN_INCLUDES=${INCLUDES=[]}}"`
 	// 标签列表
 	Tags []string `default:"${PLUGIN_TAGS=${TAGS}}"`
 	// 插件列表
@@ -43,15 +41,17 @@ type config struct {
 	outputCache    map[string]string
 	defaultOpts    map[string][]string
 	defaultPlugins map[string][]string
+
+	protoFilePattern   string
+	protoGoFilePattern string
 }
 
 func (c *config) Fields() gox.Fields {
 	return []gox.Field{
-		field.String(`type`, c.Type),
+		field.String(`lang`, c.Lang),
 		field.String(`input`, c.Input),
 		field.Strings(`output`, c.Output),
 
-		field.Strings(`types`, c.Types...),
 		field.Strings(`inputs`, c.Inputs...),
 		field.Strings(`outputs`, c.Outputs...),
 
@@ -76,21 +76,26 @@ func (c *config) load() (err error) {
 	if err = validatorx.Struct(c); nil != err {
 		return
 	}
-	if `` != c.Type {
-		c.Types = append(c.Types, c.Type)
-		c.Inputs = append(c.Inputs, fmt.Sprintf(`%s => %s`, c.Type, c.Input))
-		c.Outputs = append(c.Outputs, fmt.Sprintf(`%s => %s`, c.Type, c.Output))
+
+	// 处理默认配置
+	c.inputsCache = make(map[string][]string)
+	c.outputCache = make(map[string]string)
+	c.defaultOpts = map[string][]string{
+		`go`: {},
+	}
+	c.protoFilePattern = `*.proto`
+	c.protoGoFilePattern = `*.pb.go`
+
+	// 解析参数
+	if `` != c.Lang && 0 == len(c.Inputs) {
+		c.Inputs = append(c.Inputs, fmt.Sprintf(`%s => %s`, c.Lang, c.Input))
+		c.Outputs = append(c.Outputs, fmt.Sprintf(`%s => %s`, c.Lang, c.Output))
 	}
 	for _, input := range c.Inputs {
 		c.parseConfig(input, c.putInputs)
 	}
 	for _, output := range c.Outputs {
 		c.parseConfig(output, c.putOutput)
-	}
-
-	// 处理默认配置
-	c.defaultOpts = map[string][]string{
-		`go`: {},
 	}
 
 	return
@@ -120,7 +125,12 @@ func (c *config) parseConfig(original string, put func(configs []string)) {
 
 func (c *config) putInputs(configs []string) {
 	if nil != configs && 2 <= len(configs) {
-		c.inputsCache[configs[0]] = c.splits(configs[1], `,`, `|`, `||`)
+		value := strings.TrimSpace(configs[1])
+		if `` == value {
+			return
+		}
+
+		c.inputsCache[strings.TrimSpace(configs[0])] = c.splits(value, `,`, `|`, `||`)
 	}
 
 	return
@@ -128,13 +138,19 @@ func (c *config) putInputs(configs []string) {
 
 func (c *config) putOutput(configs []string) {
 	if nil != configs && 2 <= len(configs) {
-		c.outputCache[configs[0]] = configs[1]
+		value := strings.TrimSpace(configs[1])
+		if `` == value {
+			return
+		}
+
+		c.outputCache[strings.TrimSpace(configs[0])] = value
 	}
 
 	return
 }
 
 func (c *config) splits(config string, seps ...string) (configs []string) {
+	configs = []string{config}
 	for _, sep := range seps {
 		if strings.Contains(config, sep) {
 			configs = strings.Split(config, sep)

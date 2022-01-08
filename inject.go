@@ -7,9 +7,9 @@ import (
 func inject(conf *config, logger simaqian.Logger) (err error) {
 	for _type, output := range conf.outputCache {
 		switch _type {
-		case typeGo:
+		case langGo:
 			fallthrough
-		case typeGogo:
+		case langGogo:
 			err = golang(conf, output, logger)
 		}
 	}
