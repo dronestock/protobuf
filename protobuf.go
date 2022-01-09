@@ -21,7 +21,7 @@ func protobuf(conf *config, input string, args []string, logger simaqian.Logger)
 
 		if matched, matchErr := filepath.Match(conf.protoFilePattern, filepath.Base(path)); matchErr != nil {
 			err = matchErr
-		} else if matched {
+		} else if matched && conf.buildable(path) {
 			err = protoc(conf, path, logger, args...)
 		}
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	`fmt`
+	`path/filepath`
 	`strings`
 
 	`github.com/storezhang/gox`
@@ -12,7 +13,7 @@ import (
 
 type config struct {
 	// 语言
-	Lang string `default:"${PLUGIN_LANG=${LANG=go}}" validate:"required_without=Inputs,oneof=go golang java javascript dart"`
+	Lang string `default:"${PLUGIN_LANG=${LANG=go}}" validate:"required_without=Inputs,oneof=go gogo golang java js dart swift python"`
 	// 输入目录
 	Input string `default:"${PLUGIN_INPUT=${INPUT=.}}"`
 	// 输出目录
@@ -37,11 +38,10 @@ type config struct {
 	// 是否显示调试信息
 	Verbose bool `default:"${PLUGIN_VERBOSE=${VERBOSE=false}}"`
 
-	inputsCache    map[string][]string
-	outputCache    map[string]string
-	defaultOpts    map[string][]string
-	defaultPlugins map[string][]string
-
+	inputsCache        map[string][]string
+	outputCache        map[string]string
+	pluginsCache       map[string][]string
+	optsCache          map[string][]string
 	protoFilePattern   string
 	protoGoFilePattern string
 }
@@ -76,26 +76,35 @@ func (c *config) load() (err error) {
 	if err = validatorx.Struct(c); nil != err {
 		return
 	}
+	c.parse()
 
-	// 处理默认配置
-	c.inputsCache = make(map[string][]string)
-	c.outputCache = make(map[string]string)
-	c.defaultOpts = map[string][]string{
-		`go`: {},
-	}
-	c.protoFilePattern = `*.proto`
-	c.protoGoFilePattern = `*.pb.go`
+	return
+}
 
-	// 解析参数
-	if `` != c.Lang && 0 == len(c.Inputs) {
-		c.Inputs = append(c.Inputs, fmt.Sprintf(`%s => %s`, c.Lang, c.Input))
-		c.Outputs = append(c.Outputs, fmt.Sprintf(`%s => %s`, c.Lang, c.Output))
-	}
+func (c *config) parse() {
+	c.init()
+
 	for _, input := range c.Inputs {
-		c.parseConfig(input, c.putInputs)
+		c.parseConfig(input, c.puts(c.inputsCache))
+	}
+	for _, plugin := range c.Plugins {
+		c.parseConfig(plugin, c.puts(c.pluginsCache))
 	}
 	for _, output := range c.Outputs {
-		c.parseConfig(output, c.putOutput)
+		c.parseConfig(output, c.put(c.outputCache))
+	}
+	for _, opt := range c.Opts {
+		c.parseConfig(opt, c.puts(c.optsCache))
+	}
+}
+
+func (c *config) buildable(path string) (buildable bool) {
+	buildable = true
+	for _, include := range c.Includes {
+		if strings.HasPrefix(filepath.Dir(path), include) {
+			buildable = false
+			break
+		}
 	}
 
 	return
@@ -123,30 +132,32 @@ func (c *config) parseConfig(original string, put func(configs []string)) {
 	return
 }
 
-func (c *config) putInputs(configs []string) {
-	if nil != configs && 2 <= len(configs) {
-		value := strings.TrimSpace(configs[1])
-		if `` == value {
-			return
+func (c *config) puts(cache map[string][]string) func(configs []string) {
+	return func(configs []string) {
+		if nil != configs && 2 <= len(configs) {
+			value := strings.TrimSpace(configs[1])
+			if `` == value {
+				return
+			}
+
+			cache[strings.TrimSpace(configs[0])] = c.splits(value, `,`, `|`, `||`)
 		}
-
-		c.inputsCache[strings.TrimSpace(configs[0])] = c.splits(value, `,`, `|`, `||`)
 	}
-
-	return
 }
 
-func (c *config) putOutput(configs []string) {
-	if nil != configs && 2 <= len(configs) {
-		value := strings.TrimSpace(configs[1])
-		if `` == value {
-			return
+func (c *config) put(cache map[string]string) func(configs []string) {
+	return func(configs []string) {
+		if nil != configs && 2 <= len(configs) {
+			value := strings.TrimSpace(configs[1])
+			if `` == value {
+				return
+			}
+
+			cache[strings.TrimSpace(configs[0])] = value
 		}
 
-		c.outputCache[strings.TrimSpace(configs[0])] = value
+		return
 	}
-
-	return
 }
 
 func (c *config) splits(config string, seps ...string) (configs []string) {
@@ -159,4 +170,28 @@ func (c *config) splits(config string, seps ...string) (configs []string) {
 	}
 
 	return
+}
+
+func (c *config) init() {
+	c.inputsCache = make(map[string][]string)
+	c.pluginsCache = make(map[string][]string)
+	c.outputCache = make(map[string]string)
+	c.optsCache = make(map[string][]string)
+
+	c.protoFilePattern = `*.proto`
+	c.protoGoFilePattern = `*.pb.go`
+
+	if c.Defaults {
+		c.pluginsCache[langGo] = []string{`grpc`}
+		c.pluginsCache[langGogo] = []string{`grpc`}
+		c.pluginsCache[langDart] = []string{`generate_kythe_info`}
+		c.pluginsCache[langJs] = []string{`binary`}
+
+		c.Tags = append(c.Tags, `experimental_allow_proto3_optional`)
+	}
+
+	if `` != c.Lang && 0 == len(c.Inputs) {
+		c.Inputs = append(c.Inputs, fmt.Sprintf(`%s => %s`, c.Lang, c.Input))
+		c.Outputs = append(c.Outputs, fmt.Sprintf(`%s => %s`, c.Lang, c.Output))
+	}
 }

@@ -23,23 +23,27 @@ func build(conf *config, lang string, input string, output string, logger simaqi
 	// 添加标签
 	if 0 < len(conf.Tags) {
 		for _, tag := range conf.Tags {
-			args = append(args, tag)
+			args = append(args, fmt.Sprintf(`--%s`, tag))
 		}
 	}
 
 	// 添加插件
-	var plugins strings.Builder
-	if 0 < len(conf.Plugins) {
+	var pluginsBuilder strings.Builder
+	plugins := conf.pluginsCache[lang]
+	if 0 < len(plugins) {
 		if langGo == lang || langGogo == lang {
-			plugins.WriteString(`plugins=`)
+			pluginsBuilder.WriteString(`plugins=`)
 		}
-		plugins.WriteString(`:`)
-		plugins.WriteString(strings.Join(conf.Plugins, `,`))
+		pluginsBuilder.WriteString(strings.Join(plugins, `,`))
+		pluginsBuilder.WriteString(`:`)
 	}
 
-	args = append(args, fmt.Sprintf(`--%s_out=%s%s`, lang, plugins.String(), output))
-	if 0 < len(conf.Opts) {
-		args = append(args, fmt.Sprintf(`--%s_opt=%s`, lang, strings.Join(conf.Opts, `,`)))
+	args = append(args, fmt.Sprintf(`--%s_out=%s%s`, lang, pluginsBuilder.String(), output))
+
+	// 添加选项
+	opts := conf.optsCache[lang]
+	if 0 < len(opts) {
+		args = append(args, fmt.Sprintf(`--%s_opt=%s`, lang, strings.Join(opts, `,`)))
 	}
 	err = protobuf(conf, input, args, logger)
 
