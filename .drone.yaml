@@ -34,6 +34,7 @@ steps:
       repo: dronestock/protobuf
       tags:
         - latest
+        - 0.0.1
       compress: true
       mirror: https://docker.mirrors.ustc.edu.cn
       username: dronestock
