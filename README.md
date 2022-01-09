@@ -36,7 +36,7 @@
 - C#
 - C++
 - Dart
-- Go
+- Go / Gogo
 - Java / JavaNano (Android)
 - JavaScript
 - Objective-C
