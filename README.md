@@ -6,7 +6,7 @@
 - 使用简单，只需要简单的配置（可以做到零配置，默认生成`Go`代码）就能使用本插件
 - 增加部分语言的扩展支持（比如`Go`语言增加了标签注入）
 
-## 包含
+## 包含插件
 
 - [ckaznocha/protoc-gen-lint](https://github.com/ckaznocha/protoc-gen-lint)
 - [danielvladco/go-proto-gql](https://github.com/danielvladco/go-proto-gql)
