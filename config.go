@@ -42,10 +42,10 @@ type config struct {
 	// 是否显示调试信息
 	Verbose bool `default:"${PLUGIN_VERBOSE=${VERBOSE=false}}"`
 
-	inputsCache        map[string][]string
-	outputCache        map[string]string
-	pluginsCache       map[string][]string
-	optsCache          map[string][]string
+	inputsCache  map[string][]string
+	outputCache  map[string]string
+	pluginsCache map[string][]string
+	optsCache    map[string][]string
 
 	protoFilePattern   string
 	protoGoFilePattern string
@@ -104,6 +104,15 @@ func (c *config) parse() {
 	for _, opt := range c.Opts {
 		c.parseConfig(opt, c.puts(c.optsCache))
 	}
+}
+
+func (c *config) output(lang string) (output string) {
+	output = c.Output
+	if langDart == lang && c.Defaults {
+		output = filepath.Join(output, c.dartLibFilename)
+	}
+
+	return
 }
 
 func (c *config) buildable(path string) (buildable bool) {
