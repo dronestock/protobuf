@@ -32,4 +32,8 @@ func main() {
 	if err = inject(conf, logger); nil != err {
 		return
 	}
+	// 复制文件
+	if err = copies(conf, logger); nil != err {
+		return
+	}
 }
