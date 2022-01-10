@@ -29,8 +29,9 @@ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZN
 github.com/sirupsen/logrus v1.8.1 h1:dJKuHgqk1NNQlqoA6BTlM1Wf9DOH3NBjQyu0h9+AZZE=
 github.com/sirupsen/logrus v1.8.1/go.mod h1:yWOB1SBYBC5VeMP7gHvWumXLIWorT60ONWic61uBYv0=
 github.com/storezhang/gox v1.4.10/go.mod h1:1820pd46bSMD5opAz6IZ/272Z4p08aRjY5QEQ8iIdiQ=
-github.com/storezhang/gox v1.8.1 h1:JoTPgz1sCQRTKDGB5c/WTLSa2XVfX49LgLaIiJdW17I=
 github.com/storezhang/gox v1.8.1/go.mod h1:1820pd46bSMD5opAz6IZ/272Z4p08aRjY5QEQ8iIdiQ=
+github.com/storezhang/gox v1.8.2 h1:obbleFJ7rFfEZqNVxdSChJK0kidFJjw2wyCe6Ag7bKc=
+github.com/storezhang/gox v1.8.2/go.mod h1:1820pd46bSMD5opAz6IZ/272Z4p08aRjY5QEQ8iIdiQ=
 github.com/storezhang/mengpo v0.0.8 h1:GiVrsOUBYfj3k7uP5YPvkpMQh9NrSYGBNVfMaIHr/YE=
 github.com/storezhang/mengpo v0.0.8/go.mod h1:cCGNn37V5rrnF/eCj0Bhwxm+ZIuJsTFtN0Iq5hUekL8=
 github.com/storezhang/simaqian v0.1.0 h1:dCOQ4ObHBOJqhdzewn+R0u1a4XW5al1046mt+QvJH+M=

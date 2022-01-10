@@ -1,30 +1,21 @@
 package main
 
 import (
-	`os`
-	`path/filepath`
-
+	`github.com/storezhang/gox/file`
 	`github.com/storezhang/simaqian`
 )
 
-func golang(conf *config, output string, logger simaqian.Logger) error {
-	return filepath.Walk(output, func(path string, info os.FileInfo, walkErr error) (err error) {
-		if nil != walkErr {
-			err = walkErr
-		}
-		if nil != err {
-			return
-		}
-		if info.IsDir() {
-			return
-		}
-
-		if matched, matchErr := filepath.Match(`*.pb.go`, filepath.Base(path)); matchErr != nil {
-			err = matchErr
-		} else if matched {
-			err = gtag(conf, path, logger)
-		}
-
+func golang(conf *config, output string, logger simaqian.Logger) (err error) {
+	var paths []string
+	if paths, err = file.Files(output, file.Pattern(conf.protoGoFilePattern)); nil != err {
 		return
-	})
+	}
+
+	for _, path := range paths {
+		if err = gtag(conf, path, logger); nil != err {
+			break
+		}
+	}
+
+	return
 }

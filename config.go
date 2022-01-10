@@ -33,6 +33,10 @@ type config struct {
 	// 选项
 	Opts []string `default:"${PLUGIN_OPTS=${OPTS}}"`
 
+	// 额外特性
+	// 文件复制列表，在执行完所有操作后，将输入目录的文件或者目录复制到输出目录
+	Copies []string `default:"${PLUGIN_COPIES=${COPIES=['README.md']}}"`
+
 	// 是否启用默认优化
 	Defaults bool `default:"${PLUGIN_DEFAULTS=${DEFAULTS=true}}"`
 	// 是否显示调试信息
@@ -59,6 +63,8 @@ func (c *config) Fields() gox.Fields {
 		field.Strings(`tags`, c.Tags...),
 		field.Strings(`plugins`, c.Plugins...),
 		field.Strings(`opts`, c.Opts...),
+
+		field.Strings(`copies`, c.Copies...),
 
 		field.Bool(`defaults`, c.Defaults),
 		field.Bool(`verbose`, c.Verbose),
