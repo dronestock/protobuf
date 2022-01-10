@@ -15,7 +15,7 @@ func copies(conf *config, logger simaqian.Logger) (err error) {
 				from := filepath.Join(input, _copy)
 				to := filepath.Join(conf.outputCache[lang], _copy)
 				if err = file.Copy(from, to); nil != err {
-					logger.Error(`复制文件出错`, field.String(`from`, from), field.String(`to`, to))
+					logger.Error(`复制文件出错`, field.String(`from`, from), field.String(`to`, to), field.Error(err))
 				}
 				if nil != err {
 					return
