@@ -41,7 +41,7 @@ func build(conf *config, lang string, input string, output string, logger simaqi
 
 	// Dart语言规定，必须打进lib子目录下才能被外部正常引用
 	if langDart == lang {
-		output = filepath.Join(output, `lib`)
+		output = filepath.Join(output, conf.dartLibFilename)
 	}
 	args = append(args, fmt.Sprintf(`--%s_out=%s%s`, lang, pluginsBuilder.String(), output))
 

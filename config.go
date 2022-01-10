@@ -46,8 +46,10 @@ type config struct {
 	outputCache        map[string]string
 	pluginsCache       map[string][]string
 	optsCache          map[string][]string
+
 	protoFilePattern   string
 	protoGoFilePattern string
+	dartLibFilename    string
 }
 
 func (c *config) Fields() gox.Fields {
@@ -186,6 +188,7 @@ func (c *config) init() {
 
 	c.protoFilePattern = `*.proto`
 	c.protoGoFilePattern = `*.pb.go`
+	c.dartLibFilename = `lib`
 
 	if c.Defaults {
 		c.pluginsCache[langGo] = []string{`grpc`}
