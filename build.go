@@ -2,6 +2,7 @@ package main
 
 import (
 	`fmt`
+	`path/filepath`
 	`strings`
 
 	`github.com/storezhang/simaqian`
@@ -38,6 +39,10 @@ func build(conf *config, lang string, input string, output string, logger simaqi
 		pluginsBuilder.WriteString(`:`)
 	}
 
+	// Dart语言规定，必须打进lib子目录下才能被外部正常引用
+	if langDart == lang {
+		output = filepath.Join(output, `lib`)
+	}
 	args = append(args, fmt.Sprintf(`--%s_out=%s%s`, lang, pluginsBuilder.String(), output))
 
 	// 添加选项
