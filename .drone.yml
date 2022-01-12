@@ -19,10 +19,10 @@ steps:
     pull: if-not-exists
 
   - name: 编译
-      image: dronestock/pangu
-      pull: if-not-exists
-      settings:
-        output: protobuf
+    image: dronestock/pangu
+    pull: if-not-exists
+    settings:
+      output: protobuf
 
   - name: 打包Docker并推送
     image: plugins/docker
