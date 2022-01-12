@@ -16,7 +16,7 @@ RUN go install github.com/favadi/protoc-go-inject-tag@v${TAG_VERSION}
 FROM storezhang/protobuf
 
 
-LABEL author="storezhang"
+LABEL author="storezhang<华寅>"
 LABEL email="storezhang@gmail.com"
 LABEL architecture="AMD64/x86_64" version="latest" build="2021-01-08"
 LABEL description="Drone持续集成Protobuf插件，集成所有常见的Protobuf语言工具以及常用的插件"
