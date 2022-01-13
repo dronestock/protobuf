@@ -27,3 +27,4 @@ require (
 )
 
 // replace github.com/storezhang/mengpo => ../../storezhang/mengpo
+// replace github.com/storezhang/gfx => ../../storezhang/gfx
