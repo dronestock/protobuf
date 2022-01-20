@@ -5,14 +5,14 @@ import (
 	`github.com/storezhang/simaqian`
 )
 
-func golang(conf *config, output string, logger simaqian.Logger) (err error) {
+func (p *plugin) golang(output string, logger simaqian.Logger) (err error) {
 	var files []string
-	if files, err = gfx.All(output, gfx.Pattern(conf.protoGoFilePattern)); nil != err {
+	if files, err = gfx.All(output, gfx.Pattern(protoGoFilePattern)); nil != err {
 		return
 	}
 
 	for _, file := range files {
-		if err = gtag(conf, file, logger); nil != err {
+		if err = p.gtag(file, logger); nil != err {
 			break
 		}
 	}

@@ -1,26 +1,31 @@
 package main
 
 import (
-	`os`
-	`os/exec`
-
+	`github.com/storezhang/gex`
+	`github.com/storezhang/gox`
 	`github.com/storezhang/gox/field`
 	`github.com/storezhang/simaqian`
 )
 
-func protoc(conf *config, path string, logger simaqian.Logger, args ...string) (err error) {
-	args = append(args, path)
-	cmd := exec.Command(`protoc`, args...)
-	if conf.Verbose {
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
+func (p *plugin) protoc(path string, logger simaqian.Logger, args ...string) (err error) {
+	fields := gox.Fields{
+		field.String(`exe`, protocExe),
+		field.String(`path`, path),
+		field.Strings(`args`, args...),
 	}
 
-	pathField := field.String(`path`, path)
-	if err = cmd.Run(); nil != err {
-		logger.Error(`编译Proto文件出错`, pathField, field.Strings(`args`, args...), field.Error(err))
+	// 记录日志
+	logger.Info(`开始编译Protobuf文件`, fields...)
+
+	options := gex.NewOptions(gex.Args(args...))
+	if p.config.Debug {
+		options = append(options, gex.Quiet())
+	}
+
+	if _, err = gex.Run(protocExe, options...); nil != err {
+		logger.Error(`编译Protobuf文件出错`, fields.Connect(field.Error(err))...)
 	} else {
-		logger.Info(`编译Proto文件成功`, pathField)
+		logger.Info(`编译Protobuf文件完成`, fields...)
 	}
 
 	return

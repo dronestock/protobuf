@@ -4,10 +4,10 @@ import (
 	`github.com/storezhang/simaqian`
 )
 
-func builds(conf *config, logger simaqian.Logger) (err error) {
-	for lang, inputs := range conf.inputsCache {
+func (p *plugin) builds(logger simaqian.Logger) (undo bool, err error) {
+	for lang, inputs := range p.config.inputsCache {
 		for _, input := range inputs {
-			if err = build(conf, lang, input, conf.outputCache[lang], logger); nil != err {
+			if err = p.build(lang, input, p.config.outputCache[lang], logger); nil != err {
 				return
 			}
 		}

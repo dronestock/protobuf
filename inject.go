@@ -4,13 +4,13 @@ import (
 	`github.com/storezhang/simaqian`
 )
 
-func inject(conf *config, logger simaqian.Logger) (err error) {
-	for _type, output := range conf.outputCache {
+func (p *plugin) inject(logger simaqian.Logger) (undo bool, err error) {
+	for _type, output := range p.config.outputCache {
 		switch _type {
 		case langGo:
 			fallthrough
 		case langGogo:
-			err = golang(conf, output, logger)
+			err = p.golang(output, logger)
 		}
 	}
 

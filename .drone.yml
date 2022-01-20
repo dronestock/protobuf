@@ -16,27 +16,29 @@ trigger:
 steps:
   - name: 拉代码
     image: dronestock/git
-    pull: if-not-exists
+    pull: always
 
   - name: 编译
     image: dronestock/pangu
-    pull: if-not-exists
+    pull: always
     settings:
       output: protobuf
 
-  - name: 打包Docker并推送
-    image: plugins/docker
-    when:
-      branch:
-        - develop
-        - master
+  - name: 打包Docker到中央库
+    image: dronestock/docker
+    pull: always
+    privileged: true
+    volumes:
+      - name: cache
+        path: /var/lib/docker
     settings:
-      repo: dronestock/protobuf
-      tags:
-        - latest
-        - 0.0.1
-      compress: true
-      mirror: https://docker.mirrors.ustc.edu.cn
+      repository: dronestock/protobuf
       username: dronestock
       password:
         from_secret: token_docker
+
+
+volumes:
+  - name: cache
+    host:
+      path: /var/lib/cache/docker

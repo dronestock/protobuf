@@ -5,14 +5,14 @@ import (
 	`github.com/storezhang/simaqian`
 )
 
-func protobuf(conf *config, input string, args []string, logger simaqian.Logger) (err error) {
+func (p *plugin) protobuf(input string, args []string, logger simaqian.Logger) (err error) {
 	var files []string
-	if files, err = gfx.All(input, gfx.Pattern(conf.protoFilePattern), gfx.Matchable(conf.buildable)); nil != err {
+	if files, err = gfx.All(input, gfx.Pattern(protoFilePattern), gfx.Matchable(p.config.buildable)); nil != err {
 		return
 	}
 
 	for _, file := range files {
-		if err = protoc(conf, file, logger, args...); nil != err {
+		if err = p.protoc(file, logger, args...); nil != err {
 			break
 		}
 	}

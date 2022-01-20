@@ -2,26 +2,38 @@ package main
 
 import (
 	`fmt`
-	`os`
-	`os/exec`
 
+	`github.com/storezhang/gex`
+	`github.com/storezhang/gox`
 	`github.com/storezhang/gox/field`
 	`github.com/storezhang/simaqian`
 )
 
-func gtag(conf *config, path string, logger simaqian.Logger) (err error) {
-	args := []string{fmt.Sprintf(`-input=%s`, path), `-verbose`}
-	cmd := exec.Command(`gtag`, args...)
-	if conf.Verbose {
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
+func (p *plugin) gtag(path string, logger simaqian.Logger) (err error) {
+	args := []string{
+		fmt.Sprintf(`-input=%s`, path),
+	}
+	if p.config.Verbose {
+		args = append(args, `-verbose`)
 	}
 
-	pathField := field.String(`path`, path)
-	if err = cmd.Run(); nil != err {
-		logger.Error(`处理Golang标签出错`, pathField, field.Strings(`args`, args...), field.Error(err))
+	fields := gox.Fields{
+		field.String(`exe`, gtagExe),
+		field.String(`path`, path),
+		field.Strings(`args`, args...),
+	}
+
+	// 记录日志
+	logger.Info(`开始处理Golang标签`, fields...)
+
+	options := gex.NewOptions(gex.Args(args...))
+	if p.config.Debug {
+		options = append(options, gex.Quiet())
+	}
+	if _, err = gex.Run(gtagExe, options...); nil != err {
+		logger.Error(`处理Golang标签出错`, fields.Connect(field.Error(err))...)
 	} else {
-		logger.Info(`处理Golang标签成功`, pathField)
+		logger.Info(`处理Golang标签完成`, fields...)
 	}
 
 	return
