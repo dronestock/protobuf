@@ -23,6 +23,7 @@ steps:
     pull: always
     settings:
       output: protobuf
+      debug: true
 
   - name: 打包Docker到中央库
     image: dronestock/docker
