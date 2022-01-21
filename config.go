@@ -14,6 +14,7 @@ type config struct {
 	drone.Config
 
 	// 语言
+	// nolint:lll
 	Lang string `default:"${PLUGIN_LANG=${LANG=go}}" validate:"required_without=Inputs,oneof=go gogo golang java js dart swift python"`
 	// 输入目录
 	Input string `default:"${PLUGIN_INPUT=${INPUT=.}}"`
@@ -86,6 +87,8 @@ func (c *config) buildable(path string) (buildable bool) {
 	for _, include := range c.Includes {
 		if strings.HasPrefix(filepath.Dir(path), include) {
 			buildable = false
+		}
+		if !buildable {
 			break
 		}
 	}
