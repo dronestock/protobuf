@@ -19,11 +19,10 @@ steps:
     pull: always
 
   - name: 编译
-    image: dronestock/pangu
+    image: pangum/drone
     pull: always
     settings:
       output: protobuf
-      debug: true
 
   - name: 打包Docker到中央库
     image: dronestock/docker
