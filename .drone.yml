@@ -20,6 +20,9 @@ steps:
     image: dronestock/docker
     privileged: true
     when:
+      branch:
+        include:
+          - dependabot/*
       event:
         - tag
     volumes:
