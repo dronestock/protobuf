@@ -7,28 +7,21 @@ clone:
   disable: true
 
 
-trigger:
-  event:
-    exclude:
-      - pull_request
-
-
 steps:
-  - name: 拉代码
+  - name: 代码
     image: dronestock/git
-    pull: always
 
   - name: 编译
     image: pangum/drone
-    pull: always
     settings:
       output: protobuf
-      debug: true
 
-  - name: 打包Docker到中央库
+  - name: 发布
     image: dronestock/docker
-    pull: always
     privileged: true
+    when:
+      event:
+        - tag
     volumes:
       - name: cache
         path: /var/lib/docker

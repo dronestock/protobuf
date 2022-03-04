@@ -48,3 +48,11 @@
 - Typescript
 
 ## 使用
+
+```yaml
+steps:
+  - name: 编译
+    image: dronestock/protobuf
+    settings:
+
+```
