@@ -5,13 +5,13 @@ import (
 )
 
 func (p *plugin) protobuf(input string, args []interface{}) (err error) {
-	var files []string
-	if files, err = gfx.All(input, gfx.Pattern(protoFilePattern), gfx.Matchable(p.buildable)); nil != err {
+	var filenames []string
+	if filenames, err = gfx.All(input, gfx.Pattern(protoFilePattern), gfx.Matchable(p.buildable)); nil != err {
 		return
 	}
 
-	for _, file := range files {
-		if err = p.protoc(file, args...); nil != err {
+	for _, filename := range filenames {
+		if err = p.protoc(filename, args...); nil != err {
 			break
 		}
 	}
