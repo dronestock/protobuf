@@ -51,12 +51,12 @@
 
 ```yaml
 steps:
-- name: 编译
-image: dronestock/protobuf
-settings:
-outputs:
-- go => $${GO}
-- java => $${JAVA}
-opts:
-- go => module=github.com/storezhang/transfer
+  - name: 编译
+  image: dronestock/protobuf
+  settings:
+  outputs:
+    - go => $${GO}
+    - java => $${JAVA}
+  opts:
+    - go => module=github.com/storezhang/transfer
 ```
