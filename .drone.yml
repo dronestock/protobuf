@@ -21,9 +21,8 @@ steps:
     privileged: true
     when:
       branch:
-        include:
-          - master
-          - dependabot/*
+        - master
+        - dependabot/*
       event:
         - tag
     volumes:
