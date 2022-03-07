@@ -114,8 +114,15 @@ func (p *plugin) Fields() gox.Fields {
 
 func (p *plugin) output(lang string) (output string) {
 	output = p.outputCache[lang]
-	if langDart == lang && p.Defaults {
+	if !p.Defaults {
+		return
+	}
+
+	switch lang {
+	case langDart:
 		output = filepath.Join(output, dartLibFilename)
+	case langJava:
+		output = filepath.Join(output, javaSourceFilename)
 	}
 
 	return
