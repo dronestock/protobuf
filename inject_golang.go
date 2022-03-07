@@ -4,14 +4,14 @@ import (
 	`github.com/storezhang/gfx`
 )
 
-func (p *plugin) golang(output string) (err error) {
-	var files []string
-	if files, err = gfx.All(output, gfx.Pattern(protoGoFilePattern)); nil != err {
+func (p *plugin) golang(input string, output string) (err error) {
+	var filenames []string
+	if filenames, err = gfx.All(output, gfx.Pattern(protoGoFilePattern)); nil != err {
 		return
 	}
 
-	for _, file := range files {
-		if err = p.gtag(file); nil != err {
+	for _, filename := range filenames {
+		if err = p.gtag(input, filename); nil != err {
 			break
 		}
 	}

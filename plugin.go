@@ -89,7 +89,7 @@ func (p *plugin) Setup() (unset bool, err error) {
 func (p *plugin) Steps() []*drone.Step {
 	return []*drone.Step{
 		drone.NewStep(p.builds, drone.Name(`编译Protobuf源文件`)),
-		drone.NewStep(p.inject, drone.Name(`编译后源码注入`)),
+		drone.NewStep(p.injects, drone.Name(`编译后源码注入`)),
 		drone.NewStep(p.copies, drone.Name(`复制文件`)),
 	}
 }

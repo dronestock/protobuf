@@ -9,9 +9,9 @@ import (
 	`github.com/storezhang/gox/field`
 )
 
-func (p *plugin) gtag(path string) (err error) {
+func (p *plugin) gtag(input string, filename string) (err error) {
 	args := []interface{}{
-		fmt.Sprintf(`-input=%s`, path),
+		fmt.Sprintf(`-input=%s`, filename),
 	}
 	if p.Verbose {
 		args = append(args, `-verbose`)
@@ -19,9 +19,9 @@ func (p *plugin) gtag(path string) (err error) {
 
 	fields := gox.Fields{
 		field.String(`exe`, gtagExe),
-		field.String(`path`, path),
+		field.String(`filename`, filename),
 	}
-	if err = p.Exec(gtagExe, drone.Args(args...), drone.Dir(filepath.Dir(path))); nil != err {
+	if err = p.Exec(gtagExe, drone.Args(args...), drone.Dir(filepath.Dir(input))); nil != err {
 		p.Error(`处理Golang标签出错`, fields.Connect(field.Any(`args`, args)).Connect(field.Error(err))...)
 	} else {
 		p.Info(`处理Golang标签完成`, fields...)
