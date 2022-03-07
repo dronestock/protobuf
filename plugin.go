@@ -20,9 +20,6 @@ type plugin struct {
 	Input string `default:"${PLUGIN_INPUT=${INPUT=.}}"`
 	// 输出目录
 	Output string `default:"${PLUGIN_OUTPUT=${OUTPUT=.}}"`
-
-	// 输入目录列表
-	Inputs []string `default:"${PLUGIN_INPUTS=${INPUTS}}" validate:"required_without=Input"`
 	// 输出目录列表
 	Outputs []string `default:"${PLUGIN_OUTPUTS=${OUTPUTS}}" validate:"required_without=Output"`
 
@@ -39,7 +36,6 @@ type plugin struct {
 	// 文件复制列表，在执行完所有操作后，将输入目录的文件或者目录复制到输出目录
 	Copies []string `default:"${PLUGIN_COPIES=${COPIES=['README.md', 'LICENSE']}}"`
 
-	inputsCache  map[string][]string
 	outputCache  map[string]string
 	pluginsCache map[string][]string
 	optsCache    map[string][]string
@@ -47,7 +43,6 @@ type plugin struct {
 
 func newPlugin() drone.Plugin {
 	return &plugin{
-		inputsCache:  make(map[string][]string),
 		pluginsCache: make(map[string][]string),
 		outputCache:  make(map[string]string),
 		optsCache:    make(map[string][]string),
@@ -68,17 +63,11 @@ func (p *plugin) Setup() (unset bool, err error) {
 		p.Tags = append(p.Tags, `experimental_allow_proto3_optional`)
 	}
 
-	if `` != p.Lang {
-		if 0 == len(p.Inputs) {
-			p.Inputs = append(p.Inputs, fmt.Sprintf(`%s => %s`, p.Lang, p.Input))
-		}
-		if 0 == len(p.Outputs) {
-			p.Outputs = append(p.Outputs, fmt.Sprintf(`%s => %s`, p.Lang, p.Output))
-		}
+	if `` != p.Lang && 0 == len(p.Outputs) {
+		p.Outputs = append(p.Outputs, fmt.Sprintf(`%s => %s`, p.Lang, p.Output))
 	}
 
 	// 将原始数据转换成映射
-	p.Parses(p.inputsCache, p.Inputs...)
 	p.Parses(p.pluginsCache, p.Plugins...)
 	p.Parse(p.outputCache, p.Outputs...)
 	p.Parses(p.optsCache, p.Opts...)
@@ -99,8 +88,6 @@ func (p *plugin) Fields() gox.Fields {
 		field.String(`lang`, p.Lang),
 		field.String(`input`, p.Input),
 		field.Strings(`output`, p.Output),
-
-		field.Strings(`inputs`, p.Inputs...),
 		field.Strings(`outputs`, p.Outputs...),
 
 		field.Strings(`includes`, p.Includes...),

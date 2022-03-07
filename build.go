@@ -5,11 +5,11 @@ import (
 	`strings`
 )
 
-func (p *plugin) build(lang string, input string) (err error) {
+func (p *plugin) build(lang string) (err error) {
 	args := []interface{}{
 		// 加入当前目录
 		// 防止出现File does not reside within any path specified using --proto_path的错误
-		fmt.Sprintf(`--proto_path=%s`, input),
+		fmt.Sprintf(`--proto_path=%s`, p.Input),
 	}
 
 	// 添加导入目录
@@ -45,7 +45,7 @@ func (p *plugin) build(lang string, input string) (err error) {
 	if 0 < len(opts) {
 		args = append(args, fmt.Sprintf(`--%s_opt=%s`, lang, strings.Join(opts, `,`)))
 	}
-	err = p.protobuf(input, args)
+	err = p.protobuf(args)
 
 	return
 }
