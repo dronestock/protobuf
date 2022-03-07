@@ -11,7 +11,7 @@ func (p *plugin) protobuf(input string, args []interface{}) (err error) {
 	}
 
 	for _, filename := range filenames {
-		if err = p.protoc(filename, args...); nil != err {
+		if err = p.protoc(input, filename, args...); nil != err {
 			break
 		}
 	}
