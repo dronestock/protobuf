@@ -13,6 +13,7 @@ const (
 
 	protoFilePattern   = `*.proto`
 	protoGoFilePattern = `*.pb.go`
+
 	dartLibFilename    = `lib`
-	javaSourceFilename = `src`
+	javaSourceFilename = `src/main/java`
 )
