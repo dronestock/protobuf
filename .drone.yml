@@ -19,9 +19,6 @@ steps:
   - name: 发布
     image: dronestock/docker
     privileged: true
-    when:
-      event:
-        - tag
     volumes:
       - name: cache
         path: /var/lib/docker
