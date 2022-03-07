@@ -68,9 +68,13 @@ func (p *plugin) Setup() (unset bool, err error) {
 		p.Tags = append(p.Tags, `experimental_allow_proto3_optional`)
 	}
 
-	if `` != p.Lang && 0 == len(p.Inputs) {
-		p.Inputs = append(p.Inputs, fmt.Sprintf(`%s => %s`, p.Lang, p.Input))
-		p.Outputs = append(p.Outputs, fmt.Sprintf(`%s => %s`, p.Lang, p.Output))
+	if `` != p.Lang {
+		if 0 == len(p.Inputs) {
+			p.Inputs = append(p.Inputs, fmt.Sprintf(`%s => %s`, p.Lang, p.Input))
+		}
+		if 0 == len(p.Outputs) {
+			p.Outputs = append(p.Outputs, fmt.Sprintf(`%s => %s`, p.Lang, p.Output))
+		}
 	}
 
 	// 将原始数据转换成映射
