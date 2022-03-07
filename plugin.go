@@ -37,7 +37,7 @@ type plugin struct {
 
 	// 额外特性
 	// 文件复制列表，在执行完所有操作后，将输入目录的文件或者目录复制到输出目录
-	Copies []string `default:"${PLUGIN_COPIES=${COPIES=['README.md']}}"`
+	Copies []string `default:"${PLUGIN_COPIES=${COPIES=['README.md', 'LICENSE']}}"`
 
 	inputsCache  map[string][]string
 	outputCache  map[string]string
