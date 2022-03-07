@@ -21,10 +21,12 @@ steps:
     privileged: true
     when:
       branch:
-        - master
-        - dependabot/*
+        include:
+          - master
+          - dependabot/*
       event:
-        - tag
+        include:
+          - tag
     volumes:
       - name: cache
         path: /var/lib/docker
