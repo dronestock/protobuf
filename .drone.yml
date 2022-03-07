@@ -20,13 +20,8 @@ steps:
     image: dronestock/docker
     privileged: true
     when:
-      branch:
-        include:
-          - master
-          - dependabot/*
       event:
-        include:
-          - tag
+        - tag
     volumes:
       - name: cache
         path: /var/lib/docker
