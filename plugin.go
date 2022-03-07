@@ -118,10 +118,10 @@ func (p *plugin) output(lang string) (output string) {
 		return
 	}
 
-	switch lang {
-	case langDart:
+	switch {
+	case langDart == lang && !strings.HasSuffix(output, dartLibFilename):
 		output = filepath.Join(output, dartLibFilename)
-	case langJava:
+	case langJava == lang && !strings.HasSuffix(output, javaSourceFilename):
 		output = filepath.Join(output, javaSourceFilename)
 	}
 
