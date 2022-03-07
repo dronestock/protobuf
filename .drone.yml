@@ -22,6 +22,7 @@ steps:
     when:
       branch:
         include:
+          - master
           - dependabot/*
       event:
         - tag
