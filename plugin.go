@@ -36,16 +36,18 @@ type plugin struct {
 	// 文件复制列表，在执行完所有操作后，将输入目录的文件或者目录复制到输出目录
 	Copies []string `default:"${PLUGIN_COPIES=${COPIES=['README.md', 'LICENSE']}}"`
 
-	outputCache  map[string]string
-	pluginsCache map[string][]string
-	optsCache    map[string][]string
+	outputCache   map[string]string
+	includesCache map[string][]string
+	pluginsCache  map[string][]string
+	optsCache     map[string][]string
 }
 
 func newPlugin() drone.Plugin {
 	return &plugin{
-		pluginsCache: make(map[string][]string),
-		outputCache:  make(map[string]string),
-		optsCache:    make(map[string][]string),
+		outputCache:   make(map[string]string),
+		includesCache: make(map[string][]string),
+		pluginsCache:  make(map[string][]string),
+		optsCache:     make(map[string][]string),
 	}
 }
 
@@ -68,8 +70,9 @@ func (p *plugin) Setup() (unset bool, err error) {
 	}
 
 	// 将原始数据转换成映射
-	p.Parses(p.pluginsCache, p.Plugins...)
 	p.Parse(p.outputCache, p.Outputs...)
+	p.Parses(p.includesCache, p.Includes...)
+	p.Parses(p.pluginsCache, p.Plugins...)
 	p.Parses(p.optsCache, p.Opts...)
 
 	return

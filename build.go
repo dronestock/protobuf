@@ -8,13 +8,14 @@ import (
 func (p *plugin) build(lang string) (err error) {
 	args := []interface{}{
 		// 加入当前目录
-		// 防止出现File does not reside within any path specified using --proto_path的错误
+		// 防止出现错误：File does not reside within any path specified using --proto_path
 		fmt.Sprintf(`--proto_path=%s`, p.Input),
 	}
 
 	// 添加导入目录
-	if 0 < len(p.Includes) {
-		for _, include := range p.Includes {
+	includes := p.includesCache[lang]
+	if 0 != len(includes) {
+		for _, include := range includes {
 			args = append(args, fmt.Sprintf(`--proto_path=%s`, include))
 		}
 	}
