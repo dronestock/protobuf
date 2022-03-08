@@ -5,12 +5,5 @@ import (
 )
 
 func main() {
-	panic(drone.Bootstrap(newPlugin, drone.Configs(
-		configInputs,
-		configOutputs,
-		configIncludes,
-		configTags,
-		configPlugins,
-		configOpts,
-	)))
+	panic(drone.Bootstrap(newPlugin))
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	`fmt`
 	`path/filepath`
 	`strings`
 
@@ -21,34 +20,24 @@ type plugin struct {
 	// 输出目录
 	Output string `default:"${PLUGIN_OUTPUT=${OUTPUT=.}}"`
 	// 输出目录列表
-	Outputs []string `default:"${PLUGIN_OUTPUTS=${OUTPUTS}}" validate:"required_without=Output"`
+	Outputs map[string]string `default:"${PLUGIN_OUTPUTS=${OUTPUTS}}" validate:"required_without=Output"`
 
 	// 第三方库列表
-	Includes []string `default:"${PLUGIN_INCLUDES=${INCLUDES=[]}}"`
+	Includes []string `default:"${PLUGIN_INCLUDES=${INCLUDES}}"`
 	// 标签列表
 	Tags []string `default:"${PLUGIN_TAGS=${TAGS}}"`
 	// 插件列表
-	Plugins []string `default:"${PLUGIN_PLUGINS=${PLUGINS}}"`
+	Plugins map[string][]string `default:"${PLUGIN_PLUGINS=${PLUGINS}}"`
 	// 选项
-	Opts []string `default:"${PLUGIN_OPTS=${OPTS}}"`
+	Opts map[string][]string `default:"${PLUGIN_OPTS=${OPTS}}"`
 
 	// 额外特性
 	// 文件复制列表，在执行完所有操作后，将输入目录的文件或者目录复制到输出目录
 	Copies []string `default:"${PLUGIN_COPIES=${COPIES=['README.md', 'LICENSE']}}"`
-
-	outputCache   map[string]string
-	includesCache map[string][]string
-	pluginsCache  map[string][]string
-	optsCache     map[string][]string
 }
 
 func newPlugin() drone.Plugin {
-	return &plugin{
-		outputCache:   make(map[string]string),
-		includesCache: make(map[string][]string),
-		pluginsCache:  make(map[string][]string),
-		optsCache:     make(map[string][]string),
-	}
+	return new(plugin)
 }
 
 func (p *plugin) Config() drone.Config {
@@ -57,23 +46,17 @@ func (p *plugin) Config() drone.Config {
 
 func (p *plugin) Setup() (unset bool, err error) {
 	if p.Defaults {
-		p.pluginsCache[langGo] = []string{`grpc`}
-		p.pluginsCache[langGogo] = []string{`grpc`}
-		p.pluginsCache[langDart] = []string{`generate_kythe_info`}
-		p.pluginsCache[langJs] = []string{`binary`}
+		p.Plugins[langGo] = append(p.Plugins[langGo], `grpc`)
+		p.Plugins[langGogo] = append(p.Plugins[langGogo], `grpc`)
+		p.Plugins[langDart] = append(p.Plugins[langDart], `generate_kythe_info`)
+		p.Plugins[langJs] = append(p.Plugins[langJs], `binary`)
 
 		p.Tags = append(p.Tags, `experimental_allow_proto3_optional`)
 	}
 
 	if `` != p.Lang && 0 == len(p.Outputs) {
-		p.Outputs = append(p.Outputs, fmt.Sprintf(`%s => %s`, p.Lang, p.Output))
+		p.Outputs[p.Lang] = p.Output
 	}
-
-	// 将原始数据转换成映射
-	p.Parse(p.outputCache, p.Outputs...)
-	p.Parses(p.includesCache, p.Includes...)
-	p.Parses(p.pluginsCache, p.Plugins...)
-	p.Parses(p.optsCache, p.Opts...)
 
 	return
 }
@@ -91,19 +74,19 @@ func (p *plugin) Fields() gox.Fields {
 		field.String(`lang`, p.Lang),
 		field.String(`input`, p.Input),
 		field.Strings(`output`, p.Output),
-		field.Strings(`outputs`, p.Outputs...),
+		field.Any(`outputs`, p.Outputs),
 
 		field.Strings(`includes`, p.Includes...),
 		field.Strings(`tags`, p.Tags...),
-		field.Strings(`plugins`, p.Plugins...),
-		field.Strings(`opts`, p.Opts...),
+		field.Any(`plugins`, p.Plugins),
+		field.Any(`opts`, p.Opts),
 
 		field.Strings(`copies`, p.Copies...),
 	}
 }
 
 func (p *plugin) output(lang string) (output string) {
-	output = p.outputCache[lang]
+	output = p.Outputs[lang]
 	if !p.Defaults {
 		return
 	}

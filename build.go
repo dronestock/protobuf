@@ -13,23 +13,18 @@ func (p *plugin) build(lang string) (err error) {
 	}
 
 	// 添加导入目录
-	includes := p.includesCache[lang]
-	if 0 != len(includes) {
-		for _, include := range includes {
-			args = append(args, fmt.Sprintf(`--proto_path=%s`, include))
-		}
+	for _, include := range p.Includes {
+		args = append(args, fmt.Sprintf(`--proto_path=%s`, include))
 	}
 
 	// 添加标签
-	if 0 < len(p.Tags) {
-		for _, tag := range p.Tags {
-			args = append(args, fmt.Sprintf(`--%s`, tag))
-		}
+	for _, tag := range p.Tags {
+		args = append(args, fmt.Sprintf(`--%s`, tag))
 	}
 
 	// 添加插件
 	var pb strings.Builder
-	plugins := p.pluginsCache[lang]
+	plugins := p.Plugins[lang]
 	if 0 < len(plugins) {
 		if langGo == lang || langGogo == lang {
 			pb.WriteString(`plugins=`)
@@ -42,7 +37,7 @@ func (p *plugin) build(lang string) (err error) {
 	args = append(args, fmt.Sprintf(`--%s_out=%s%s`, lang, pb.String(), p.output(lang)))
 
 	// 添加选项
-	opts := p.optsCache[lang]
+	opts := p.Opts[lang]
 	if 0 < len(opts) {
 		args = append(args, fmt.Sprintf(`--%s_opt=%s`, lang, strings.Join(opts, `,`)))
 	}

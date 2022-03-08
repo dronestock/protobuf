@@ -8,7 +8,7 @@ import (
 )
 
 func (p *plugin) copies() (undo bool, err error) {
-	for _, output := range p.outputCache {
+	for _, output := range p.Outputs {
 		for _, filename := range p.Copies {
 			from := filepath.Join(p.Input, filename)
 			to := filepath.Join(output, filename)
