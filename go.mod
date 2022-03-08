@@ -3,7 +3,7 @@ module github.com/dronestock/protobuf
 go 1.17
 
 require (
-	github.com/dronestock/drone v0.2.9
+	github.com/dronestock/drone v0.3.0
 	github.com/storezhang/gfx v0.0.2
 	github.com/storezhang/gox v1.8.4
 )
@@ -14,7 +14,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.10.0 // indirect
 	github.com/goexl/gex v0.2.1 // indirect
-	github.com/goexl/mengpo v0.1.3 // indirect
+	github.com/goexl/mengpo v0.1.4 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
