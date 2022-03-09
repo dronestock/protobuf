@@ -45,6 +45,12 @@ func (p *plugin) Config() drone.Config {
 	return p
 }
 
+func (p *plugin) Setup() (unset bool, err error) {
+	p.Outputs[p.Lang] = p.Output
+
+	return
+}
+
 func (p *plugin) Steps() []*drone.Step {
 	return []*drone.Step{
 		drone.NewStep(p.builds, drone.Name(`编译`)),
@@ -112,9 +118,6 @@ func (p *plugin) tags() (tags []string) {
 
 func (p *plugin) output(lang string) (output string) {
 	output = p.Outputs[lang]
-	if !p.Defaults {
-		return
-	}
 
 	switch {
 	case langDart == lang && !strings.HasSuffix(output, dartLibFilename):
