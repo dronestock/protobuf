@@ -85,7 +85,10 @@ func (p *plugin) plugins(lang string) (plugins string) {
 		defaults = `binary`
 	}
 
-	olds := strings.Split(plugins, separator)
+	olds := make([]string, 0)
+	if `` != strings.TrimSpace(plugins) {
+		olds = append(olds, strings.Split(plugins, separator)...)
+	}
 	if `` != defaults && !strings.Contains(plugins, defaults) {
 		olds = append(olds, defaults)
 	}
