@@ -1,6 +1,7 @@
 package main
 
 import (
+	`fmt`
 	`path/filepath`
 	`strings`
 
@@ -15,8 +16,8 @@ type plugin struct {
 	// 语言
 	// nolint:lll
 	Lang string `default:"${PLUGIN_LANG=${LANG=go}}" validate:"required_without=Inputs,oneof=go gogo golang java js dart swift python"`
-	// 输入目录
-	Input string `default:"${PLUGIN_INPUT=${INPUT=.}}"`
+	// 源文件目录
+	Src string `default:"${PLUGIN_SRC=${SRC=.}}"`
 	// 输出目录
 	Output string `default:"${PLUGIN_OUTPUT=${OUTPUT=.}}"`
 	// 输出目录列表
@@ -27,9 +28,9 @@ type plugin struct {
 	// 标签列表
 	Tags []string `default:"${PLUGIN_TAGS=${TAGS}}"`
 	// 插件列表
-	Plugins map[string][]string `default:"${PLUGIN_PLUGINS=${PLUGINS}}"`
+	Plugins map[string]string `default:"${PLUGIN_PLUGINS=${PLUGINS}}"`
 	// 选项
-	Opts map[string][]string `default:"${PLUGIN_OPTS=${OPTS}}"`
+	Opt map[string]string `default:"${PLUGIN_OPT=${OPT}}"`
 
 	// 额外特性
 	// 文件复制列表，在执行完所有操作后，将输入目录的文件或者目录复制到输出目录
@@ -44,45 +45,62 @@ func (p *plugin) Config() drone.Config {
 	return p
 }
 
-func (p *plugin) Setup() (unset bool, err error) {
-	if p.Defaults {
-		p.Plugins[langGo] = append(p.Plugins[langGo], `grpc`)
-		p.Plugins[langGogo] = append(p.Plugins[langGogo], `grpc`)
-		p.Plugins[langDart] = append(p.Plugins[langDart], `generate_kythe_info`)
-		p.Plugins[langJs] = append(p.Plugins[langJs], `binary`)
-
-		p.Tags = append(p.Tags, `experimental_allow_proto3_optional`)
-	}
-
-	if `` != p.Lang && 0 == len(p.Outputs) {
-		p.Outputs[p.Lang] = p.Output
-	}
-
-	return
-}
-
 func (p *plugin) Steps() []*drone.Step {
 	return []*drone.Step{
-		drone.NewStep(p.builds, drone.Name(`编译Protobuf源文件`)),
-		drone.NewStep(p.injects, drone.Name(`编译后源码注入`)),
-		drone.NewStep(p.copies, drone.Name(`复制文件`)),
+		drone.NewStep(p.builds, drone.Name(`编译`)),
+		drone.NewStep(p.injects, drone.Name(`注入`)),
+		drone.NewStep(p.copies, drone.Name(`复制`)),
 	}
 }
 
 func (p *plugin) Fields() gox.Fields {
 	return []gox.Field{
 		field.String(`lang`, p.Lang),
-		field.String(`input`, p.Input),
+		field.String(`input`, p.Src),
 		field.Strings(`output`, p.Output),
 		field.Any(`outputs`, p.Outputs),
 
 		field.Strings(`includes`, p.Includes...),
 		field.Strings(`tags`, p.Tags...),
 		field.Any(`plugins`, p.Plugins),
-		field.Any(`opts`, p.Opts),
+		field.Any(`opt`, p.Opt),
 
 		field.Strings(`copies`, p.Copies...),
 	}
+}
+
+func (p *plugin) plugins(lang string) (plugin string) {
+	plugin = p.Plugins[lang]
+	if !p.Defaults {
+		return
+	}
+
+	var defaults string
+	switch lang {
+	case langGo, langGogo:
+		defaults = `grpc`
+	case langDart:
+		defaults = `generate_kythe_info`
+	case langJs:
+		defaults = `binary`
+	}
+
+	if `` != defaults && !strings.Contains(plugin, defaults) {
+		plugin = fmt.Sprintf(`%s,%s`, plugin, defaults)
+	}
+
+	p.Tags = append(p.Tags, `experimental_allow_proto3_optional`)
+
+	return
+}
+
+func (p *plugin) tags() (tags []string) {
+	tags = p.Tags
+	if p.Defaults {
+		tags = append(tags, `experimental_allow_proto3_optional`)
+	}
+
+	return
 }
 
 func (p *plugin) output(lang string) (output string) {

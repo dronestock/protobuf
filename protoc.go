@@ -17,9 +17,9 @@ func (p *plugin) protoc(input string, filename string, args ...interface{}) (err
 	args = append(args, filename)
 
 	if err = p.Exec(protocExe, drone.Args(args...), drone.Dir(filepath.Dir(input))); nil != err {
-		p.Error(`编译Protobuf文件出错`, fields.Connect(field.Any(`args`, args)).Connect(field.Error(err))...)
-	} else {
-		p.Info(`编译Protobuf文件完成`, fields...)
+		p.Error(`编译出错`, fields.Connect(field.Any(`args`, args)).Connect(field.Error(err))...)
+	} else if p.Verbose {
+		p.Info(`编译成功`, fields...)
 	}
 
 	return

@@ -2,14 +2,13 @@ package main
 
 import (
 	`fmt`
-	`strings`
 )
 
 func (p *plugin) build(lang string) (err error) {
 	args := []interface{}{
 		// 加入当前目录
 		// 防止出现错误：File does not reside within any path specified using --proto_path
-		fmt.Sprintf(`--proto_path=%s`, p.Input),
+		fmt.Sprintf(`--proto_path=%s`, p.Src),
 	}
 
 	// 添加导入目录
@@ -18,29 +17,15 @@ func (p *plugin) build(lang string) (err error) {
 	}
 
 	// 添加标签
-	for _, tag := range p.Tags {
+	for _, tag := range p.tags() {
 		args = append(args, fmt.Sprintf(`--%s`, tag))
 	}
 
-	// 添加插件
-	var pb strings.Builder
-	plugins := p.Plugins[lang]
-	if 0 < len(plugins) {
-		if langGo == lang || langGogo == lang {
-			pb.WriteString(`plugins=`)
-		}
-		pb.WriteString(strings.Join(plugins, `,`))
-		pb.WriteString(`:`)
-	}
-
-	// 加入输出目录
-	args = append(args, fmt.Sprintf(`--%s_out=%s%s`, lang, pb.String(), p.output(lang)))
-
+	// 添加插件他输出目录
+	args = append(args, fmt.Sprintf(`--%s_out=plugins=%s:%s`, lang, p.plugins(lang), p.output(lang)))
 	// 添加选项
-	opts := p.Opts[lang]
-	if 0 < len(opts) {
-		args = append(args, fmt.Sprintf(`--%s_opt=%s`, lang, strings.Join(opts, `,`)))
-	}
+	args = append(args, fmt.Sprintf(`--%s_opt=%s`, lang, p.Opt[lang]))
+	// 编译
 	err = p.protobuf(args)
 
 	return
