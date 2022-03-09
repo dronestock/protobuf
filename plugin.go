@@ -17,7 +17,7 @@ type plugin struct {
 	// nolint:lll
 	Lang string `default:"${PLUGIN_LANG=${LANG=go}}" validate:"required_without=Inputs,oneof=go gogo golang java js dart swift python"`
 	// 源文件目录
-	Src string `default:"${PLUGIN_SRC=${SRC=.}}"`
+	Source string `default:"${PLUGIN_SOURCE=${SOURCE=.}}"`
 	// 输出目录
 	Output string `default:"${PLUGIN_OUTPUT=${OUTPUT=.}}"`
 	// 输出目录列表
@@ -56,7 +56,7 @@ func (p *plugin) Steps() []*drone.Step {
 func (p *plugin) Fields() gox.Fields {
 	return []gox.Field{
 		field.String(`lang`, p.Lang),
-		field.String(`input`, p.Src),
+		field.String(`input`, p.Source),
 		field.Strings(`output`, p.Output),
 		field.Any(`outputs`, p.Outputs),
 

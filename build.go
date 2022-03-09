@@ -8,7 +8,7 @@ func (p *plugin) build(lang string) (err error) {
 	args := []interface{}{
 		// 加入当前目录
 		// 防止出现错误：File does not reside within any path specified using --proto_path
-		fmt.Sprintf(`--proto_path=%s`, p.Src),
+		fmt.Sprintf(`--proto_path=%s`, p.Source),
 	}
 
 	// 添加导入目录

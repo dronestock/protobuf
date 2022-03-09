@@ -21,7 +21,7 @@ func (p *plugin) gtag(filename string) (err error) {
 		field.String(`exe`, gtagExe),
 		field.String(`filename`, filename),
 	}
-	if err = p.Exec(gtagExe, drone.Args(args...), drone.Dir(filepath.Dir(p.Src))); nil != err {
+	if err = p.Exec(gtagExe, drone.Args(args...), drone.Dir(filepath.Dir(p.Source))); nil != err {
 		p.Error(`注入出错`, fields.Connect(field.Any(`args`, args)).Connect(field.Error(err))...)
 	} else if p.Verbose {
 		p.Info(`注入成功`, fields...)
