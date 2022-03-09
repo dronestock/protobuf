@@ -77,12 +77,14 @@ func (p *plugin) plugins(lang string) (plugins string) {
 
 	var defaults string
 	switch lang {
-	case langGo, langGogo:
+	case langGo, langGogo, langJava:
 		defaults = `grpc`
 	case langDart:
 		defaults = `generate_kythe_info`
 	case langJs:
 		defaults = `binary`
+	default:
+		return
 	}
 
 	olds := make([]string, 0)
