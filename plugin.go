@@ -77,7 +77,7 @@ func (p *plugin) plugins(lang string) (plugins string) {
 
 	var defaults string
 	switch lang {
-	case langGo, langGogo, langJava:
+	case langGo, langGogo:
 		defaults = `grpc`
 	case langDart:
 		defaults = `generate_kythe_info`
