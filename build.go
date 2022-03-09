@@ -22,7 +22,7 @@ func (p *plugin) build(lang string) (err error) {
 	}
 
 	// 添加插件他输出目录
-	args = append(args, fmt.Sprintf(`--%s_out=plugins=%s:%s`, lang, p.plugins(lang), p.output(lang)))
+	args = append(args, fmt.Sprintf(`--%s_out=%s%s`, lang, p.plugins(lang), p.output(lang)))
 	// 添加选项
 	args = append(args, fmt.Sprintf(`--%s_opt=%s`, lang, p.Opt[lang]))
 	// 编译

@@ -9,4 +9,6 @@ const (
 
 	dartLibFilename    = `lib`
 	javaSourceFilename = `src/main/java`
+
+	separator = `,`
 )

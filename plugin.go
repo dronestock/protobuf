@@ -69,8 +69,8 @@ func (p *plugin) Fields() gox.Fields {
 	}
 }
 
-func (p *plugin) plugins(lang string) (plugin string) {
-	plugin = p.Plugins[lang]
+func (p *plugin) plugins(lang string) (plugins string) {
+	plugins = p.Plugins[lang]
 	if !p.Defaults {
 		return
 	}
@@ -85,11 +85,11 @@ func (p *plugin) plugins(lang string) (plugin string) {
 		defaults = `binary`
 	}
 
-	if `` != defaults && !strings.Contains(plugin, defaults) {
-		plugin = fmt.Sprintf(`%s,%s`, plugin, defaults)
+	olds := strings.Split(plugins, separator)
+	if `` != defaults && !strings.Contains(plugins, defaults) {
+		olds = append(olds, defaults)
 	}
-
-	p.Tags = append(p.Tags, `experimental_allow_proto3_optional`)
+	plugins = fmt.Sprintf(`plugins=%s:`, strings.Join(olds, separator))
 
 	return
 }
