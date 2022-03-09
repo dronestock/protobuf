@@ -75,10 +75,12 @@ func (p *plugin) plugins(lang string) (plugins string) {
 		return
 	}
 
-	var defaults string
+	defaults := ``
+	prefix := ``
 	switch lang {
 	case langGo, langGogo:
 		defaults = `grpc`
+		prefix = `plugins=`
 	case langDart:
 		defaults = `generate_kythe_info`
 	case langJs:
@@ -94,7 +96,7 @@ func (p *plugin) plugins(lang string) (plugins string) {
 	if `` != defaults && !strings.Contains(plugins, defaults) {
 		olds = append(olds, defaults)
 	}
-	plugins = fmt.Sprintf(`plugins=%s:`, strings.Join(olds, separator))
+	plugins = fmt.Sprintf(`%s%s:`, prefix, strings.Join(olds, separator))
 
 	return
 }
