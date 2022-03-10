@@ -1,7 +1,7 @@
 package main
 
 import (
-	`github.com/storezhang/gfx`
+	`github.com/goexl/gfx`
 )
 
 func (p *plugin) protobuf(args []interface{}) (err error) {
