@@ -81,7 +81,7 @@ func (p *plugin) plugins(lang string) (plugins string) {
 		return
 	}
 
-	defaults := ``
+	var defaults string
 	prefix := ``
 	switch lang {
 	case langGo, langGogo:
