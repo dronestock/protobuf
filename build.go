@@ -4,7 +4,7 @@ import (
 	`fmt`
 )
 
-func (p *plugin) build(lang string) (err error) {
+func (p *plugin) build(typ string) (err error) {
 	args := []interface{}{
 		// 加入当前目录
 		// 防止出现错误：File does not reside within any path specified using --proto_path
@@ -22,9 +22,9 @@ func (p *plugin) build(lang string) (err error) {
 	}
 
 	// 添加插件他输出目录
-	args = append(args, fmt.Sprintf(`--%s_out=%s%s`, lang, p.plugins(lang), p.output(lang)))
+	args = append(args, fmt.Sprintf(`--%s_out=%s%s`, typ, p.plugins(typ), p.output(typ)))
 	// 添加选项
-	args = append(args, fmt.Sprintf(`--%s_opt=%s`, lang, p.Opt[lang]))
+	args = append(args, fmt.Sprintf(`--%s_opt=%s`, typ, p.Opt[typ]))
 	// 编译
 	err = p.protobuf(args)
 

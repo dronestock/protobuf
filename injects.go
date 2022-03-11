@@ -1,8 +1,8 @@
 package main
 
 func (p *plugin) injects() (undo bool, err error) {
-	for lang := range p.Outputs {
-		if err = p.inject(lang); nil != err {
+	for typ := range p.Outputs {
+		if err = p.inject(typ); nil != err {
 			return
 		}
 	}

@@ -1,11 +1,11 @@
 package main
 
-func (p *plugin) inject(lang string) (err error) {
-	switch lang {
-	case langGo:
+func (p *plugin) inject(typ string) (err error) {
+	switch typ {
+	case typeGo:
 		fallthrough
-	case langGogo:
-		err = p.golang(p.output(lang))
+	case typeGogo:
+		err = p.golang(p.output(typ))
 	}
 
 	return

@@ -13,9 +13,9 @@ import (
 type plugin struct {
 	drone.PluginBase
 
-	// 语言
+	// 类型
 	// nolint:lll
-	Lang string `default:"${PLUGIN_LANG=${LANG=go}}" validate:"required_without=Inputs,oneof=go gogo golang java js dart swift python"`
+	Type string `default:"${PLUGIN_TYPE=${TYPE=go}}" validate:"required_without=Inputs,oneof=go gogo golang java js dart swift python"`
 	// 源文件目录
 	Source string `default:"${PLUGIN_SOURCE=${SOURCE=.}}"`
 	// 输出目录
@@ -46,7 +46,9 @@ func (p *plugin) Config() drone.Config {
 }
 
 func (p *plugin) Setup() (unset bool, err error) {
-	p.Outputs[p.Lang] = p.Output
+	if 0 == len(p.Outputs) {
+		p.Outputs[p.Type] = p.Output
+	}
 
 	return
 }
@@ -61,7 +63,7 @@ func (p *plugin) Steps() []*drone.Step {
 
 func (p *plugin) Fields() gox.Fields {
 	return []gox.Field{
-		field.String(`lang`, p.Lang),
+		field.String(`type`, p.Type),
 		field.String(`input`, p.Source),
 		field.Strings(`output`, p.Output),
 		field.Any(`outputs`, p.Outputs),
@@ -75,21 +77,21 @@ func (p *plugin) Fields() gox.Fields {
 	}
 }
 
-func (p *plugin) plugins(lang string) (plugins string) {
-	plugins = p.Plugins[lang]
+func (p *plugin) plugins(typ string) (plugins string) {
+	plugins = p.Plugins[typ]
 	if !p.Defaults {
 		return
 	}
 
 	var defaults string
 	prefix := ``
-	switch lang {
-	case langGo, langGogo:
+	switch typ {
+	case typeGo, typeGogo:
 		defaults = `grpc`
 		prefix = `plugins=`
-	case langDart:
+	case typeDart:
 		defaults = `generate_kythe_info`
-	case langJs:
+	case typeJs:
 		defaults = `binary`
 	default:
 		return
@@ -116,13 +118,13 @@ func (p *plugin) tags() (tags []string) {
 	return
 }
 
-func (p *plugin) output(lang string) (output string) {
-	output = p.Outputs[lang]
+func (p *plugin) output(typ string) (output string) {
+	output = p.Outputs[typ]
 
 	switch {
-	case langDart == lang && !strings.HasSuffix(output, dartLibFilename):
+	case typeDart == typ && !strings.HasSuffix(output, dartLibFilename):
 		output = filepath.Join(output, dartLibFilename)
-	case langJava == lang && !strings.HasSuffix(output, filepath.FromSlash(javaSourceFilename)):
+	case typeJava == typ && !strings.HasSuffix(output, filepath.FromSlash(javaSourceFilename)):
 		output = filepath.Join(output, filepath.FromSlash(javaSourceFilename))
 	}
 
