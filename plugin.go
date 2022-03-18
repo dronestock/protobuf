@@ -6,8 +6,8 @@ import (
 	`strings`
 
 	`github.com/dronestock/drone`
-	`github.com/storezhang/gox`
-	`github.com/storezhang/gox/field`
+	`github.com/goexl/gox`
+	`github.com/goexl/gox/field`
 )
 
 type plugin struct {

@@ -4,26 +4,29 @@ import (
 	`path/filepath`
 
 	`github.com/goexl/gfx`
-	`github.com/storezhang/gox/field`
+	`github.com/goexl/gox/field`
 )
 
 func (p *plugin) copies() (undo bool, err error) {
 	for _, output := range p.Outputs {
-		for _, filename := range p.Copies {
-			from := filepath.Join(p.Source, filename)
-			to := filepath.Join(output, filename)
-			// 有两种情况不应该执行文件复制
-			// 源文件不存在
-			// 目的文件已经存在
-			if !gfx.Exists(from) || gfx.Exists(to) {
+		for _, _copy := range p.Copies {
+			var needs []string
+			if needs, err = gfx.All(p.Source, gfx.Pattern(_copy)); nil != err {
 				continue
 			}
 
-			if err = gfx.Copy(from, to); nil != err {
-				p.Error(`复制文件出错`, field.String(`from`, from), field.String(`to`, to), field.Error(err))
-			}
-			if nil != err {
-				return
+			// 对列出的所有文件逐一复制
+			for _, need := range needs {
+				filename := gfx.Filename(need, gfx.File())
+				to := filepath.Join(output, filename)
+				// 目的文件已经存在，不应该执行文件复制
+				if _, exists := gfx.Exists(to); exists {
+					continue
+				}
+
+				if err = gfx.Copy(need, to); nil != err {
+					p.Error(`复制文件出错`, field.String(`from`, need), field.String(`to`, to), field.Error(err))
+				}
 			}
 		}
 	}

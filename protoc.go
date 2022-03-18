@@ -4,8 +4,8 @@ import (
 	`path/filepath`
 
 	`github.com/dronestock/drone`
-	`github.com/storezhang/gox`
-	`github.com/storezhang/gox/field`
+	`github.com/goexl/gox`
+	`github.com/goexl/gox/field`
 )
 
 func (p *plugin) protoc(input string, filename string, args ...interface{}) (err error) {
