@@ -9,7 +9,7 @@ import (
 
 func (p *plugin) copies() (undo bool, err error) {
 	for _, output := range p.Outputs {
-		for _, _copy := range p.Copies {
+		for _, _copy := range p._copies() {
 			var needs []string
 			if needs, err = gfx.All(p.Source, gfx.Pattern(_copy)); nil != err {
 				continue

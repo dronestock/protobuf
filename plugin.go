@@ -34,7 +34,7 @@ type plugin struct {
 
 	// 额外特性
 	// 文件复制列表，在执行完所有操作后，将输入目录的文件或者目录复制到输出目录
-	Copies []string `default:"${PLUGIN_COPIES=${COPIES=['README.md', 'LICENSE']}}"`
+	Copies []string `default:"${PLUGIN_COPIES=${COPIES}}"`
 }
 
 func newPlugin() drone.Plugin {
@@ -113,6 +113,15 @@ func (p *plugin) tags() (tags []string) {
 	tags = p.Tags
 	if p.Defaults {
 		tags = append(tags, `experimental_allow_proto3_optional`)
+	}
+
+	return
+}
+
+func (p *plugin) _copies() (copies []string) {
+	copies = p.Copies
+	if p.Defaults {
+		copies = append(copies, "README.md", "LICENSE", "logo.*")
 	}
 
 	return
