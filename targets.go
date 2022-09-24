@@ -1,8 +1,8 @@
 package main
 
 func (p *plugin) builds() (undo bool, err error) {
-	for typ := range p.Outputs {
-		if err = p.build(typ); nil != err {
+	for _, _target := range p.Targets {
+		if err = _target.build(p); nil != err {
 			return
 		}
 	}
