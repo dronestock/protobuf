@@ -13,7 +13,7 @@ RUN go install github.com/favadi/protoc-go-inject-tag@v${TAG_VERSION}
 
 
 # 打包真正的镜像
-FROM storezhang/protobuf:0.0.1
+FROM ccr.ccs.tencentyun.com/storezhang/protobuf:0.0.1
 
 
 LABEL author="storezhang<华寅>" \
