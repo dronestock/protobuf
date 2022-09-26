@@ -10,7 +10,7 @@ type target struct {
 	// 语言
 	Lang string `default:"go" json:"build" validate:"oneof=go gogo golang java js dart swift python"`
 	// 输出目录
-	Output string `default:"." json:"output" validate:"file"`
+	Output string `default:"." json:"output"`
 	// 插件列表
 	Plugins string `json:"plugins"`
 	// 选项
