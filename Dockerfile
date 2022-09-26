@@ -13,14 +13,13 @@ RUN go install github.com/favadi/protoc-go-inject-tag@v${TAG_VERSION}
 
 
 # 打包真正的镜像
-FROM ccr.ccs.tencentyun.com/storezhang/protobuf:0.0.1
+FROM storezhang/protobuf:0.0.1
 
 
 LABEL author="storezhang<华寅>" \
     email="storezhang@gmail.com" \
     qq="160290688" \
     wechat="storezhang" \
-    architecture="AMD64/x86_64" version="latest" build="2022-01-20" \
     description="Drone持续集成Protobuf插件，集成所有常见的Protobuf语言工具以及常用的插件"
 
 
