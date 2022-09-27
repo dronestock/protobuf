@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 )
 
 type target struct {
 	// 语言
-	Lang string `default:"go" json:"build" validate:"oneof=go gogo golang java js dart swift python"`
+	Lang string `default:"go" json:"lang" validate:"oneof=go gogo golang java js dart swift python"`
 	// 输出目录
 	Output string `default:"." json:"output"`
 	// 插件列表
@@ -34,6 +35,10 @@ func (t *target) _output() (output string) {
 	case typeJava == t.Lang && !strings.HasSuffix(output, filepath.FromSlash(javaSourceFilename)):
 		output = filepath.Join(output, filepath.FromSlash(javaSourceFilename))
 	}
+
+	// 转换成绝对路径，防止Protobuf找不到路径报错
+	output, _ = filepath.Abs(output)
+	_ = os.MkdirAll(output, os.ModePerm)
 
 	return
 }
