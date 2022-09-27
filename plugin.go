@@ -2,6 +2,7 @@ package main
 
 import (
 	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/dronestock/drone"
@@ -77,7 +78,7 @@ func (p *plugin) tags() (tags []string) {
 }
 
 func (p *plugin) buildable(filename string) (buildable bool, err error) {
-	if buildable, err = path.Match(protoFilePattern, filename); nil != err || !buildable {
+	if buildable, err = filepath.Match(protoFilePattern, filename); nil != err || !buildable {
 		return
 	}
 

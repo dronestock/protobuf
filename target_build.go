@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/goexl/gfx"
-	"github.com/goexl/gox/field"
 )
 
 func (t *target) build(plugin *plugin) (err error) {
@@ -33,7 +32,6 @@ func (t *target) build(plugin *plugin) (err error) {
 	if filenames, ge := gfx.All(plugin.Source, gfx.Matchable(plugin.buildable)); nil != ge {
 		err = ge
 	} else {
-		plugin.Info(`文件`, field.Strings(`filenames`, filenames...))
 		for _, filename := range filenames {
 			if err = plugin.protoc(plugin.Source, filename, args...); nil != err {
 				break
