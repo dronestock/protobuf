@@ -77,7 +77,6 @@ func (p *plugin) tags() (tags []string) {
 }
 
 func (p *plugin) buildable(filename string) (buildable bool, err error) {
-	p.Info(`检查`, field.String(`filename`, filename))
 	if buildable, err = path.Match(protoFilePattern, filename); nil != err || !buildable {
 		return
 	}
@@ -86,6 +85,7 @@ func (p *plugin) buildable(filename string) (buildable bool, err error) {
 	for _, include := range p.Includes {
 		if strings.HasPrefix(path.Dir(filename), include) {
 			buildable = false
+			p.Info(`包括`, field.String(`filename`, filename))
 		}
 		if !buildable {
 			break
