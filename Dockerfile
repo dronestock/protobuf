@@ -1,7 +1,7 @@
 FROM golang:alpine AS gtag
 
 
-ENV GOPROXY https://goproxy.cn,https://mirrors.aliyun.com/goproxy,https://goproxy.io,direct
+ENV GOPROXY https://mirrors.aliyun.com/goproxy,https://goproxy.io,direct
 # 标签修改程序版本
 ENV TAG_VERSION 1.4.0
 
