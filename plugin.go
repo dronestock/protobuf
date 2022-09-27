@@ -1,7 +1,7 @@
 package main
 
 import (
-	"path/filepath"
+	"path"
 	"strings"
 
 	"github.com/dronestock/drone"
@@ -76,10 +76,14 @@ func (p *plugin) tags() (tags []string) {
 	return
 }
 
-func (p *plugin) buildable(path string) (buildable bool, err error) {
+func (p *plugin) buildable(filename string) (buildable bool, err error) {
+	if buildable, err = path.Match(protoFilePattern, filename); nil != err || !buildable {
+		return
+	}
+
 	buildable = true
 	for _, include := range p.Includes {
-		if strings.HasPrefix(filepath.Dir(path), include) {
+		if strings.HasPrefix(path.Dir(filename), include) {
 			buildable = false
 		}
 		if !buildable {

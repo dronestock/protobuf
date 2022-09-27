@@ -29,11 +29,7 @@ func (t *target) build(plugin *plugin) (err error) {
 	args = append(args, t.opt())
 
 	// 编译
-	walkOptions := gfx.NewWalkOptions(
-		gfx.Pattern(protoFilePattern),
-		gfx.Matchable(plugin.buildable),
-	)
-	if filenames, ge := gfx.All(plugin.Source, walkOptions...); nil != ge {
+	if filenames, ge := gfx.All(plugin.Source, gfx.Matchable(plugin.buildable)); nil != ge {
 		err = ge
 	} else {
 		for _, filename := range filenames {
