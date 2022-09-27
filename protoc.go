@@ -1,16 +1,17 @@
 package main
 
 import (
-	`path/filepath`
+	"path/filepath"
 
-	`github.com/dronestock/drone`
-	`github.com/goexl/gox`
-	`github.com/goexl/gox/field`
+	"github.com/dronestock/drone"
+	"github.com/goexl/gox"
+	"github.com/goexl/gox/field"
 )
 
 func (p *plugin) protoc(input string, filename string, args ...interface{}) (err error) {
 	fields := gox.Fields{
 		field.String(`exe`, protocExe),
+		field.String(`input`, input),
 		field.String(`filename`, filename),
 	}
 	// 将需要编译的文件加入到最终的参数中

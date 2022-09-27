@@ -1,6 +1,7 @@
 package main
 
 const (
+	// protocExe = `D:\Developments\Google\Protobuf\bin\protoc.exe`
 	protocExe = `protoc`
 	gtagExe   = `gtag`
 
