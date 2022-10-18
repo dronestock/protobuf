@@ -2,15 +2,23 @@ package main
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/goexl/gfx"
 )
 
 func (t *target) build(plugin *plugin) (err error) {
-	args := []interface{}{
-		// 加入当前目录
-		// 防止出现错误：File does not reside within any path specified using --proto_path
-		`--proto_path`, plugin.Source,
+	args := make([]any, 0, 16)
+
+	// 加入当前目录
+	// 防止出现错误：File does not reside within any path specified using --proto_path
+	if abs, ae := filepath.Abs(plugin.Source); nil != ae {
+		err = ae
+	} else {
+		args = append(args, `--proto_path`, abs)
+	}
+	if nil != err {
+		return
 	}
 
 	// 添加导入目录

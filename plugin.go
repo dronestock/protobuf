@@ -20,7 +20,7 @@ type plugin struct {
 	Targets []target `default:"${PLUGIN_TARGETS=${TARGETS}}"`
 
 	// 第三方库列表
-	Includes []string `default:"${PLUGIN_INCLUDES=${INCLUDES}}"`
+	Includes []string `default:"${PLUGIN_INCLUDES=${INCLUDES}}" validate:"dive,file"`
 	// 标签列表
 	Tags []string `default:"${PLUGIN_TAGS=${TAGS}}"`
 
