@@ -10,12 +10,12 @@ func (t *target) build(plugin *plugin) (err error) {
 	args := []interface{}{
 		// 加入当前目录
 		// 防止出现错误：File does not reside within any path specified using --proto_path
-		`--proto_path=%s`, plugin.Source,
+		`--proto_path`, plugin.Source,
 	}
 
 	// 添加导入目录
 	for _, include := range plugin.Includes {
-		args = append(args, `--proto_path=%s`, include)
+		args = append(args, `--proto_path`, include)
 	}
 
 	// 添加标签
