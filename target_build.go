@@ -23,7 +23,15 @@ func (t *target) build(plugin *plugin) (err error) {
 
 	// 添加导入目录
 	for _, include := range plugin.Includes {
-		args = append(args, `--proto_path`, include)
+		if abs, ae := filepath.Abs(include); nil != ae {
+			err = ae
+		} else {
+			args = append(args, `--proto_path`, abs)
+		}
+
+		if nil != err {
+			return
+		}
 	}
 
 	// 添加标签
