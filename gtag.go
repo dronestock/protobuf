@@ -1,12 +1,12 @@
 package main
 
 import (
-	`fmt`
-	`path/filepath`
+	"fmt"
+	"path/filepath"
 
-	`github.com/dronestock/drone`
-	`github.com/goexl/gox`
-	`github.com/goexl/gox/field`
+	"github.com/dronestock/drone"
+	"github.com/goexl/gox"
+	"github.com/goexl/gox/field"
 )
 
 func (p *plugin) gtag(filename string) (err error) {
