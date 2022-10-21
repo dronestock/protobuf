@@ -5,7 +5,7 @@ func (t *target) inject(plugin *plugin) (err error) {
 	case langGo:
 		fallthrough
 	case langGogo:
-		err = t._golang(plugin)
+		err = t.golang(plugin)
 	}
 
 	return

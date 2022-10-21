@@ -19,20 +19,30 @@ type target struct {
 }
 
 func (t *target) opt() string {
-	return fmt.Sprintf(`--%s_opt=%s`, t.Lang, t.Opt)
+	return fmt.Sprintf(`--%s_opt=%s`, t.lang(), t.Opt)
 }
 
 func (t *target) out(defaults bool) string {
-	return fmt.Sprintf(`--%s_out=%s%s`, t.Lang, t._plugins(defaults), t._output())
+	return fmt.Sprintf(`--%s_out=%s%s`, t.lang(), t.plugins(defaults), t.output())
 }
 
-func (t *target) _output() (output string) {
+func (t *target) lang() (lang string) {
+	lang = t.Lang
+	switch t.Lang {
+	case langJava:
+		lang = `grpc-java`
+	}
+
+	return
+}
+
+func (t *target) output() (output string) {
 	output = t.Output
 
 	switch {
 	case langDart == t.Lang && !strings.HasSuffix(output, dartLibFilename):
 		output = filepath.Join(output, dartLibFilename)
-	case typeJava == t.Lang && !strings.HasSuffix(output, filepath.FromSlash(javaSourceFilename)):
+	case langJava == t.Lang && !strings.HasSuffix(output, filepath.FromSlash(javaSourceFilename)):
 		output = filepath.Join(output, filepath.FromSlash(javaSourceFilename))
 	}
 
@@ -43,7 +53,7 @@ func (t *target) _output() (output string) {
 	return
 }
 
-func (t *target) _plugins(defaults bool) (plugins string) {
+func (t *target) plugins(defaults bool) (plugins string) {
 	plugins = t.Plugins
 	if !defaults {
 		return
@@ -52,6 +62,9 @@ func (t *target) _plugins(defaults bool) (plugins string) {
 	var dps string
 	prefix := ``
 	switch t.Lang {
+	case langJava:
+		dps = `protoc-gen-grpc-java`
+		prefix = `--plugin=`
 	case langGo, langGogo:
 		dps = `grpc`
 		prefix = `plugins=`
