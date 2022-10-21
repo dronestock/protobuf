@@ -27,7 +27,7 @@ func (t *target) out(defaults bool) (out string) {
 	case langJava:
 		out = fmt.Sprintf(`%s --grpc-java_out=%s --java_out=%s`, t.plugins(defaults), t.output(), t.output())
 	default:
-		out = fmt.Sprintf(`--%s_out=%s%s`, t.Lang, t.plugins(defaults), t.output())
+		out = fmt.Sprintf(`--%s_out=%s:%s`, t.Lang, t.plugins(defaults), t.output())
 	}
 
 	return
@@ -80,7 +80,7 @@ func (t *target) plugins(defaults bool) (plugins string) {
 	if `` != dps && !strings.Contains(plugins, dps) {
 		olds = append(olds, dps)
 	}
-	plugins = fmt.Sprintf(`%s%s:`, prefix, strings.Join(olds, separator))
+	plugins = fmt.Sprintf(`%s%s`, prefix, strings.Join(olds, separator))
 
 	return
 }
