@@ -14,6 +14,11 @@ func (p *plugin) protoc(input string, filename string, args ...interface{}) (err
 		field.String(`input`, input),
 		field.String(`filename`, filename),
 	}
+	// 有警告时不允许编译通过
+	if p.FatalWarnings {
+		args = append(args, `--fatal_warnings`)
+	}
+
 	// 将需要编译的文件加入到最终的参数中
 	args = append(args, filename)
 
