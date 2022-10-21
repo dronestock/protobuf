@@ -25,7 +25,7 @@ func (t *target) opt() string {
 func (t *target) out(defaults bool) (out string) {
 	switch t.Lang {
 	case langJava:
-		out = fmt.Sprintf(`%s --grpc-java_out=%s --java_out=%s`, t.plugins(defaults), t.output(), t.output())
+		out = fmt.Sprintf(`%s --grpc-java_out=%s`, t.plugins(defaults), t.output())
 	default:
 		out = fmt.Sprintf(`--%s_out=%s:%s`, t.Lang, t.plugins(defaults), t.output())
 	}
