@@ -40,7 +40,9 @@ func (t *target) build(plugin *plugin) (err error) {
 	}
 
 	// 添加插件他输出目录
-	args = append(args, t.out(plugin.Defaults))
+	for _, out := range t.out(plugin.Defaults) {
+		args = append(args, out)
+	}
 	// 添加选项
 	args = append(args, t.opt())
 

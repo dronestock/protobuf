@@ -22,12 +22,15 @@ func (t *target) opt() string {
 	return fmt.Sprintf(`--%s_opt=%s`, t.Lang, t.Opt)
 }
 
-func (t *target) out(defaults bool) (out string) {
+func (t *target) out(defaults bool) (out []string) {
 	switch t.Lang {
 	case langJava:
-		out = fmt.Sprintf(`--%sjava_out=%s`, t.plugins(defaults), t.output())
+		out = []string{
+			fmt.Sprintf(`--java_out=%s`, t.output()),
+			fmt.Sprintf(`--%sjava_out=%s`, t.plugins(defaults), t.output()),
+		}
 	default:
-		out = fmt.Sprintf(`--%s_out=%s:%s`, t.Lang, t.plugins(defaults), t.output())
+		out = []string{fmt.Sprintf(`--%s_out=%s:%s`, t.Lang, t.plugins(defaults), t.output())}
 	}
 
 	return
