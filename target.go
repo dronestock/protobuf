@@ -22,15 +22,12 @@ func (t *target) opt() string {
 	return fmt.Sprintf(`--%s_opt=%s`, t.Lang, t.Opt)
 }
 
-func (t *target) out(defaults bool) (out []string) {
+func (t *target) out(defaults bool) (out string) {
 	switch t.Lang {
 	case langJava:
-		out = []string{
-			t.plugins(defaults),
-			fmt.Sprintf(`--grpc-java_out=%s`, t.output()),
-		}
+		out = fmt.Sprintf(`--%sjava_out=%s`, t.plugins(defaults), t.output())
 	default:
-		out = []string{fmt.Sprintf(`--%s_out=%s:%s`, t.Lang, t.plugins(defaults), t.output())}
+		out = fmt.Sprintf(`--%s_out=%s:%s`, t.Lang, t.plugins(defaults), t.output())
 	}
 
 	return
@@ -61,13 +58,14 @@ func (t *target) plugins(defaults bool) (plugins string) {
 
 	var dps string
 	prefix := ``
+	staff := ``
 	switch t.Lang {
 	case langJava:
-		dps = `protoc-gen-grpc-java`
-		prefix = `--plugin=`
-	case langGo, langGogo:
 		dps = `grpc`
+		staff = `-`
+	case langGo, langGogo:
 		prefix = `plugins=`
+		dps = `grpc`
 	case langDart:
 		dps = `generate_kythe_info`
 	case langJs:
@@ -83,7 +81,7 @@ func (t *target) plugins(defaults bool) (plugins string) {
 	if `` != dps && !strings.Contains(plugins, dps) {
 		olds = append(olds, dps)
 	}
-	plugins = fmt.Sprintf(`%s%s`, prefix, strings.Join(olds, separator))
+	plugins = fmt.Sprintf(`%s%s%s`, prefix, strings.Join(olds, separator), staff)
 
 	return
 }

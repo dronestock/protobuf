@@ -49,16 +49,16 @@ func (p *plugin) Setup() (unset bool, err error) {
 
 func (p *plugin) Steps() []*drone.Step {
 	return []*drone.Step{
-		drone.NewStep(p.builds, drone.Name(`编译`)),
-		drone.NewStep(p.injects, drone.Name(`注入`)),
-		drone.NewStep(p.copies, drone.Name(`复制`)),
+		drone.NewStep(p.build, drone.Name(`编译`)),
+		drone.NewStep(p.inject, drone.Name(`注入`)),
+		drone.NewStep(p.copy, drone.Name(`复制`)),
 	}
 }
 
 func (p *plugin) Fields() gox.Fields {
 	return []gox.Field{
 		field.String(`input`, p.Source),
-		field.Any(`builds`, p.Targets),
+		field.Any(`targets`, p.Targets),
 
 		field.Strings(`includes`, p.Includes...),
 		field.Strings(`tags`, p.Tags...),

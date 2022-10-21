@@ -1,6 +1,6 @@
 package main
 
-func (p *plugin) copies() (undo bool, err error) {
+func (p *plugin) copy() (undo bool, err error) {
 	defaults := p.Copies
 	if p.Defaults {
 		defaults = append(defaults, "README.md", "LICENSE", "logo.*")
