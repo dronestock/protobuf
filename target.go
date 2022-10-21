@@ -19,18 +19,15 @@ type target struct {
 }
 
 func (t *target) opt() string {
-	return fmt.Sprintf(`--%s_opt=%s`, t.lang(), t.Opt)
+	return fmt.Sprintf(`--%s_opt=%s`, t.Lang, t.Opt)
 }
 
-func (t *target) out(defaults bool) string {
-	return fmt.Sprintf(`--%s_out=%s%s`, t.lang(), t.plugins(defaults), t.output())
-}
-
-func (t *target) lang() (lang string) {
-	lang = t.Lang
+func (t *target) out(defaults bool) (out string) {
 	switch t.Lang {
 	case langJava:
-		lang = `grpc-java`
+		out = fmt.Sprintf(`%s --grpc-java_out=%s --java_out=%s`, t.plugins(defaults), t.output(), t.output())
+	default:
+		out = fmt.Sprintf(`--%s_out=%s%s`, t.Lang, t.plugins(defaults), t.output())
 	}
 
 	return
