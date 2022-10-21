@@ -27,7 +27,7 @@ func (t *target) out(defaults bool) (out []string) {
 	case langJava:
 		out = []string{
 			t.plugins(defaults),
-			fmt.Sprintf(`--java_out=%s`, t.output()),
+			fmt.Sprintf(`--grpc-java_out=%s`, t.output()),
 		}
 	default:
 		out = []string{fmt.Sprintf(`--%s_out=%s:%s`, t.Lang, t.plugins(defaults), t.output())}
