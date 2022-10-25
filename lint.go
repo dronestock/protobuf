@@ -23,7 +23,7 @@ func (p *plugin) lint() (undo bool, err error) {
 	if final, exists := gfx.Exists(filepath.Join(p.Source, p.Lint.Config)); exists {
 		config = final
 	}
-	err = p.Exec(protolintExe, drone.Args(`lint`, `-fix`, `-auto_disable`, `next`, `-config_path`, config, p.Source))
+	err = p.Exec(protolintExe, drone.Args(`lint`, `-fix`, `-config_path`, config, p.Source))
 
 	return
 }
