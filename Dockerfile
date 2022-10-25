@@ -40,6 +40,7 @@ LABEL author="storezhang<华寅>" \
 # 复制文件
 COPY --from=gtag /go/bin/protoc-go-inject-tag /usr/bin/gtag
 COPY --from=protolint /go/bin/protolint /usr/bin/protolint
+COPY docker /
 COPY protobuf /bin
 
 

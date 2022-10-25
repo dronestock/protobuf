@@ -9,8 +9,9 @@ const (
 	protoFilePattern   = `*.proto`
 	protoGoFilePattern = `*.pb.go`
 
-	dartLibFilename    = `lib`
-	javaSourceFilename = `src/main/java`
+	dartLibFilename         = `lib`
+	javaSourceFilename      = `src/main/java`
+	protolintConfigFilename = `/etc/protolint/rule.yml`
 
 	separator = `,`
 )
