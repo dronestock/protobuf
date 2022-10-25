@@ -2,8 +2,9 @@ package main
 
 const (
 	// protocExe = `D:\Developments\Google\Protobuf\bin\protoc.exe`
-	protocExe = `protoc`
-	gtagExe   = `gtag`
+	protocExe    = `protoc`
+	gtagExe      = `gtag`
+	protolintExe = `protolint`
 
 	protoFilePattern   = `*.proto`
 	protoGoFilePattern = `*.pb.go`

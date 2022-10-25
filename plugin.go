@@ -51,6 +51,7 @@ func (p *plugin) Setup() (unset bool, err error) {
 
 func (p *plugin) Steps() []*drone.Step {
 	return []*drone.Step{
+		drone.NewStep(p.build, drone.Name(`检查`)),
 		drone.NewStep(p.build, drone.Name(`编译`)),
 		drone.NewStep(p.inject, drone.Name(`注入`)),
 		drone.NewStep(p.copy, drone.Name(`复制`)),
