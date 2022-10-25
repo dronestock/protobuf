@@ -23,7 +23,7 @@ ENV LINT_VERSION 0.41.0
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
 RUN apk update
 RUN apk add git
-RUN go install github.com/yoheimuta/protolint/cmd/protolint@${LINT_VERSION}
+RUN go install github.com/yoheimuta/protolint/cmd/protolint@v${LINT_VERSION}
 
 
 
