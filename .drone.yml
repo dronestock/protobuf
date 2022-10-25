@@ -19,7 +19,6 @@ steps:
     settings:
       output: protobuf
 
-
   - name: 发布
     image: ccr.ccs.tencentyun.com/dronestock/docker
     privileged: true
