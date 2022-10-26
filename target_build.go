@@ -44,7 +44,7 @@ func (t *target) build(plugin *plugin) (err error) {
 		args = append(args, out)
 	}
 	// 添加选项
-	for _, opt := range t.out(plugin.Defaults) {
+	for _, opt := range t.opt(plugin.Defaults) {
 		args = append(args, opt)
 	}
 
