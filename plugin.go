@@ -15,9 +15,9 @@ type plugin struct {
 	// 源文件目录
 	Source string `default:"${PLUGIN_SOURCE=${SOURCE=.}}"`
 	// 目标
-	Target target `default:"${PLUGIN_TARGET=${TARGET}}"`
+	Target *target `default:"${PLUGIN_TARGET=${TARGET}}" validate:"required_without=Targets"`
 	// 目标列表
-	Targets []target `default:"${PLUGIN_TARGETS=${TARGETS}}"`
+	Targets []*target `default:"${PLUGIN_TARGETS=${TARGETS}}" validate:"required_without=Target"`
 
 	// 第三方库列表
 	Includes []string `default:"${PLUGIN_INCLUDES=${INCLUDES}}"`
@@ -34,9 +34,7 @@ type plugin struct {
 }
 
 func newPlugin() drone.Plugin {
-	return &plugin{
-		Targets: make([]target, 0, 1),
-	}
+	return new(plugin)
 }
 
 func (p *plugin) Config() drone.Config {
@@ -44,7 +42,10 @@ func (p *plugin) Config() drone.Config {
 }
 
 func (p *plugin) Setup() (unset bool, err error) {
-	if 0 == len(p.Targets) {
+	if nil != p.Target {
+		if nil == p.Targets {
+			p.Targets = make([]*target, 0, 1)
+		}
 		p.Targets = append(p.Targets, p.Target)
 	}
 
@@ -53,7 +54,7 @@ func (p *plugin) Setup() (unset bool, err error) {
 
 func (p *plugin) Steps() []*drone.Step {
 	return []*drone.Step{
-		drone.NewStep(p.lint, drone.Name(`检查`)),
+		// drone.NewStep(p.lint, drone.Name(`检查`)),
 		drone.NewStep(p.build, drone.Name(`编译`)),
 		drone.NewStep(p.inject, drone.Name(`注入`)),
 		drone.NewStep(p.copy, drone.Name(`复制`)),
