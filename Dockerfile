@@ -27,7 +27,7 @@ RUN go install github.com/yoheimuta/protolint/cmd/protolint@v${LINT_VERSION}
 
 
 # 打包真正的镜像
-FROM rvolosatovs/protoc:3.3.0
+FROM namely/protoc-all:1.50_0
 
 
 LABEL author="storezhang<华寅>" \
