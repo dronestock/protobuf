@@ -18,22 +18,38 @@ type target struct {
 	Opt string `json:"opt"`
 }
 
-func (t *target) opt() string {
-	return fmt.Sprintf(`--%s_opt=%s`, t.Lang, t.Opt)
+func (t *target) opt(defaults bool) (opt []string) {
+	opt = make([]string, 0, 1)
+	plugins := t.plugins(defaults)
+	switch t.Lang {
+	case langGo, langGolang:
+		opt = append(opt, fmt.Sprintf(`--go_opt=%s`, t.Opt))
+		for _, _plugin := range plugins {
+			opt = append(opt, fmt.Sprintf(`--go-%s_opt=%s`, _plugin, t.Opt))
+		}
+	default:
+		opt = append(opt, fmt.Sprintf(`--%s_opt=%s`, t.Lang, t.Opt))
+	}
+
+	return
 }
 
 func (t *target) out(defaults bool) (out []string) {
 	out = make([]string, 0, 1)
-	prefix, plugins := t.plugins(defaults)
+	plugins := t.plugins(defaults)
 	switch t.Lang {
 	case langJava:
 		out = append(out, fmt.Sprintf(`--java_out=%s`, t.output()))
 		for _, _plugin := range plugins {
-			out = append(out, fmt.Sprintf(`--%s-java_out=%s`, fmt.Sprintf(`%s%s`, prefix, _plugin), t.output()))
+			out = append(out, fmt.Sprintf(`--%s-java_out=%s`, _plugin, t.output()))
+		}
+	case langGo, langGolang:
+		out = append(out, fmt.Sprintf(`--go_out=%s`, t.output()))
+		for _, _plugin := range plugins {
+			out = append(out, fmt.Sprintf(`--go-%s_out=%s`, _plugin, t.output()))
 		}
 	default:
-		_plugin := fmt.Sprintf(`%s%s`, prefix, strings.Join(plugins, separator))
-		out = append(out, fmt.Sprintf(`--%s_out=%s:%s`, t.Lang, _plugin, t.output()))
+		out = append(out, fmt.Sprintf(`--%s_out=%s:%s`, t.Lang, strings.Join(plugins, separator), t.output()))
 	}
 
 	return
@@ -56,7 +72,7 @@ func (t *target) output() (output string) {
 	return
 }
 
-func (t *target) plugins(defaults bool) (prefix string, plugins []string) {
+func (t *target) plugins(defaults bool) (plugins []string) {
 	plugins = t.Plugins
 	if !defaults {
 		return
@@ -66,7 +82,6 @@ func (t *target) plugins(defaults bool) (prefix string, plugins []string) {
 	case langJava:
 		plugins = append(plugins, `grpc`)
 	case langGo, langGogo:
-		prefix = `plugins=`
 		plugins = append(plugins, `grpc`)
 	case langDart:
 		plugins = append(plugins, `generate_kythe_info`)

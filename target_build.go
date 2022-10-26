@@ -44,7 +44,9 @@ func (t *target) build(plugin *plugin) (err error) {
 		args = append(args, out)
 	}
 	// 添加选项
-	args = append(args, t.opt())
+	for _, opt := range t.out(plugin.Defaults) {
+		args = append(args, opt)
+	}
 
 	// 编译
 	if filenames, ge := gfx.All(plugin.Source, gfx.Matchable(plugin.buildable)); nil != ge {
