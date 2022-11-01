@@ -6,8 +6,8 @@ const (
 	gtagExe      = `gtag`
 	protolintExe = `protolint`
 
-	protoFilePattern   = `*.proto`
-	protoGoFilePattern = `*.pb.go`
+	protoFilePattern  = `*.proto`
+	protoGoFileSuffix = `pb.go`
 
 	dartLibFilename         = `lib`
 	javaSourceFilename      = `src/main/java`

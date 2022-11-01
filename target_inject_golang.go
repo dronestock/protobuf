@@ -6,7 +6,7 @@ import (
 
 func (t *target) golang(plugin *plugin) (err error) {
 	var filenames []string
-	if filenames, err = gfx.All(t.output(), gfx.Pattern(protoGoFilePattern)); nil != err {
+	if filenames, err = gfx.All(t.output(), gfx.Suffix(protoGoFileSuffix)); nil != err {
 		return
 	}
 
