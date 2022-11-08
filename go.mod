@@ -6,7 +6,7 @@ require (
 	github.com/dronestock/drone v0.5.0
 	github.com/goexl/gfx v0.1.3
 	github.com/goexl/gox v0.1.2
-	github.com/goexl/simaqian v0.1.8
+	github.com/goexl/simaqian v0.1.9
 )
 
 require (
