@@ -19,11 +19,11 @@ func (p *plugin) lint() (undo bool, err error) {
 		return
 	}
 
-	config := protolintConfigFilename
+	config := lintConfigFilename
 	if final, exists := gfx.Exists(filepath.Join(p.Source, p.Lint.Config)); exists {
 		config = final
 	}
-	err = p.Exec(protolintExe, drone.Args(`lint`, `-fix`, `-config_path`, config, p.Source))
+	err = p.Exec(lintExe, drone.Args(`lint`, `-fix`, `-config_path`, config, p.Source))
 
 	return
 }
