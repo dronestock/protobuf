@@ -10,17 +10,7 @@ RUN go install github.com/favadi/protoc-go-inject-tag@v${TAG_VERSION}
 
 
 
-
-
-FROM golang:alpine AS protolint
-
-
-ENV GOPROXY https://mirrors.aliyun.com/goproxy,direct
-# 静态检查版本
-ENV LINT_VERSION 0.41.0
-
-# 安装静态检查检查程序
-RUN go install github.com/yoheimuta/protolint/cmd/protolint@v${LINT_VERSION}
+FROM yoheimuta/protolint:0.42.0 AS protolint
 
 
 
@@ -39,7 +29,7 @@ LABEL author="storezhang<华寅>" \
 
 # 复制文件
 COPY --from=gtag /go/bin/protoc-go-inject-tag /usr/bin/gtag
-COPY --from=protolint /go/bin/protolint /usr/bin/protolint
+COPY --from=protolint /usr/local/bin/protolint /usr/local/bin/protolint
 COPY docker /
 COPY protobuf /bin
 
