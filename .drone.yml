@@ -32,6 +32,7 @@ steps:
         from_secret: password_tencentyun_ccr
     settings:
       repository: dronestock/protobuf
+      tag: 0.0.1
       registries:
         - username: dronestock
           password: $${PASSWORD_DOCKER}
