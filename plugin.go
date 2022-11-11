@@ -61,7 +61,7 @@ func (p *plugin) Steps() []*drone.Step {
 		// 注入，不依赖网络环境，不需要重试
 		drone.NewStep(p.inject, drone.Name(`注入`), drone.Interrupt()),
 		// 复制，不依赖网络环境，不需要重试
-		drone.NewStep(p.copy, drone.Name(`复制`)),
+		drone.NewStep(p.copy, drone.Name(`复制`), drone.Interrupt()),
 	}
 }
 
