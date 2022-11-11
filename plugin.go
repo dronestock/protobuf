@@ -54,9 +54,13 @@ func (p *plugin) Setup() (unset bool, err error) {
 
 func (p *plugin) Steps() []*drone.Step {
 	return []*drone.Step{
-		drone.NewStep(p.lint, drone.Name(`检查`)),
-		drone.NewStep(p.build, drone.Name(`编译`)),
-		drone.NewStep(p.inject, drone.Name(`注入`)),
+		// 纯静态检查，不需要重试
+		drone.NewStep(p.lint, drone.Name(`检查`), drone.Interrupt()),
+		// 编译，不依赖网络环境，不需要重试
+		drone.NewStep(p.build, drone.Name(`编译`), drone.Interrupt()),
+		// 注入，不依赖网络环境，不需要重试
+		drone.NewStep(p.inject, drone.Name(`注入`), drone.Interrupt()),
+		// 复制，不依赖网络环境，不需要重试
 		drone.NewStep(p.copy, drone.Name(`复制`)),
 	}
 }
