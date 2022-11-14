@@ -3,7 +3,7 @@ module github.com/dronestock/protobuf
 go 1.18
 
 require (
-	github.com/dronestock/drone v0.5.3
+	github.com/dronestock/drone v0.5.6
 	github.com/goexl/gfx v0.1.6
 	github.com/goexl/gox v0.1.2
 	github.com/goexl/simaqian v0.1.9
