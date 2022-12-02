@@ -52,35 +52,35 @@ func (p *plugin) Setup() (unset bool, err error) {
 	return
 }
 
-func (p *plugin) Steps() []*drone.Step {
-	return []*drone.Step{
+func (p *plugin) Steps() drone.Steps {
+	return drone.Steps{
 		// 纯静态检查，不需要重试
-		drone.NewStep(p.lint, drone.Name(`检查`), drone.Interrupt()),
+		drone.NewStep(p.lint, drone.Name("检查"), drone.Interrupt()),
 		// 编译，不依赖网络环境，不需要重试
-		drone.NewStep(p.build, drone.Name(`编译`), drone.Interrupt()),
+		drone.NewStep(p.build, drone.Name("编译"), drone.Interrupt()),
 		// 注入，不依赖网络环境，不需要重试
-		drone.NewStep(p.inject, drone.Name(`注入`), drone.Interrupt()),
+		drone.NewStep(p.inject, drone.Name("注入"), drone.Interrupt()),
 		// 复制，不依赖网络环境，不需要重试
-		drone.NewStep(p.copy, drone.Name(`复制`), drone.Interrupt()),
+		drone.NewStep(p.copy, drone.Name("复制"), drone.Interrupt()),
 	}
 }
 
-func (p *plugin) Fields() gox.Fields {
-	return []gox.Field{
-		field.String(`input`, p.Source),
-		field.Any(`targets`, p.Targets),
+func (p *plugin) Fields() gox.Fields[any] {
+	return gox.Fields[any]{
+		field.New("input", p.Source),
+		field.New("targets", p.Targets),
 
-		field.Strings(`includes`, p.Includes...),
-		field.Strings(`tags`, p.Tags...),
+		field.New("includes", p.Includes),
+		field.New("tags", p.Tags),
 
-		field.Strings(`copies`, p.Copies...),
+		field.New("copies", p.Copies),
 	}
 }
 
 func (p *plugin) tags() (tags []string) {
 	tags = p.Tags
 	if p.Defaults {
-		tags = append(tags, `experimental_allow_proto3_optional`)
+		tags = append(tags, "experimental_allow_proto3_optional")
 	}
 
 	return

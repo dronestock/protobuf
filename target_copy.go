@@ -17,7 +17,7 @@ func (t *target) copy(source string, logger simaqian.Logger, filenames ...string
 
 		// 对列出的所有文件逐一复制
 		for _, need := range needs {
-			destFilename := gfx.Name(need, gfx.File())
+			destFilename := gfx.Name(need, gfx.File(), gfx.Ext(filepath.Ext(need)))
 			to := filepath.Join(t.output(), destFilename)
 			// 目的文件已经存在，不应该执行文件复制
 			if _, exists := gfx.Exists(to); exists {
@@ -25,7 +25,7 @@ func (t *target) copy(source string, logger simaqian.Logger, filenames ...string
 			}
 
 			if err = gfx.Copy(need, to); nil != err {
-				logger.Error(`复制文件出错`, field.String(`from`, need), field.String(`to`, to), field.Error(err))
+				logger.Error("复制文件出错", field.New("from", need), field.New("to", to), field.Error(err))
 			}
 		}
 	}

@@ -11,20 +11,20 @@ import (
 
 func (p *plugin) gtag(filename string) (err error) {
 	args := []interface{}{
-		fmt.Sprintf(`-input=%s`, filename),
+		fmt.Sprintf("-input=%s", filename),
 	}
 	if p.Verbose {
-		args = append(args, `-verbose`)
+		args = append(args, "-verbose")
 	}
 
-	fields := gox.Fields{
-		field.String(`exe`, gtagExe),
-		field.String(`filename`, filename),
+	fields := gox.Fields[any]{
+		field.New("exe", gtagExe),
+		field.New("filename", filename),
 	}
 	if err = p.Exec(gtagExe, drone.Args(args...), drone.Dir(filepath.Dir(p.Source))); nil != err {
-		p.Error(`注入出错`, fields.Connect(field.Any(`args`, args)).Connect(field.Error(err))...)
+		p.Error("注入出错", fields.Connect(field.New("args", args)).Connect(field.Error(err))...)
 	} else if p.Verbose {
-		p.Info(`注入成功`, fields...)
+		p.Info("注入成功", fields...)
 	}
 
 	return
