@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/dronestock/drone v0.5.7
-	github.com/goexl/gfx v0.1.6
+	github.com/goexl/gfx v0.1.7
 	github.com/goexl/gox v0.1.6
 	github.com/goexl/simaqian v0.2.1
 )
@@ -30,7 +30,7 @@ require (
 	go.uber.org/zap v1.24.0 // indirect
 	golang.org/x/crypto v0.3.0 // indirect
 	golang.org/x/sys v0.3.0 // indirect
-	golang.org/x/text v0.4.0 // indirect
+	golang.org/x/text v0.5.0 // indirect
 )
 
 // replace github.com/dronestock/drone => ../drone
