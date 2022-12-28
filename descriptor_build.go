@@ -30,7 +30,7 @@ func (d *descriptor) build(plugin *plugin) (err error) {
 	args = append(args, "--descriptor_set_out", d.Output)
 
 	// 编译
-	err = plugin.protoc(plugin.Source, d.Sources, args)
+	err = plugin.protoc(plugin.Source, append([]string{d.Source}, d.Sources...), args)
 
 	return
 }
