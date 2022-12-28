@@ -53,7 +53,7 @@ func (t *target) build(plugin *plugin) (err error) {
 		err = ge
 	} else {
 		for _, filename := range filenames {
-			if err = plugin.protoc(plugin.Source, filename, args...); nil != err {
+			if err = plugin.protoc(plugin.Source, []string{filename}, args); nil != err {
 				break
 			}
 		}

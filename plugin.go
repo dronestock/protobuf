@@ -13,24 +13,28 @@ type plugin struct {
 	drone.Base
 
 	// 源文件目录
-	Source string `default:"${PLUGIN_SOURCE=${SOURCE=.}}"`
+	Source string `default:"${SOURCE=.}"`
 	// 目标
-	Target *target `default:"${PLUGIN_TARGET=${TARGET}}" validate:"required_without=Targets"`
+	Target *target `default:"${TARGET}" validate:"required_without=Targets"`
 	// 目标列表
-	Targets []*target `default:"${PLUGIN_TARGETS=${TARGETS}}" validate:"required_without=Target"`
+	Targets []*target `default:"${TARGETS}" validate:"required_without=Target"`
 
 	// 第三方库列表
-	Includes []string `default:"${PLUGIN_INCLUDES=${INCLUDES}}"`
+	Includes []string `default:"${INCLUDES}"`
 	// 标签列表
-	Tags []string `default:"${PLUGIN_TAGS=${TAGS}}"`
+	Tags []string `default:"${TAGS}"`
 	// 有警告时不允许编译通过
-	FatalWarnings bool `default:"${PLUGIN_FATAL_WARNINGS=${FATAL_WARNINGS=true}}"`
+	FatalWarnings bool `default:"${FATAL_WARNINGS=true}"`
 
 	// 额外特性
 	// 静态检查
-	Lint lint `default:"${PLUGIN_LINT=${LINT}}"`
+	Lint lint `default:"${LINT}"`
+	// 生成描述信息文件
+	Descriptor *descriptor `default:"${DESCRIPTOR}" validate:"required_without=Descriptors"`
+	// 生成描述信息文件列表
+	Descriptors []*descriptor `default:"${DESCRIPTORS}" validate:"required_without=Descriptor"`
 	// 文件复制列表，在执行完所有操作后，将输入目录的文件或者目录复制到输出目录
-	Copies []string `default:"${PLUGIN_COPIES=${COPIES}}"`
+	Copies []string `default:"${COPIES}"`
 }
 
 func newPlugin() drone.Plugin {
@@ -49,6 +53,13 @@ func (p *plugin) Setup() (unset bool, err error) {
 		p.Targets = append(p.Targets, p.Target)
 	}
 
+	if nil != p.Descriptor {
+		if nil == p.Descriptors {
+			p.Descriptors = make([]*descriptor, 0, 1)
+		}
+		p.Descriptors = append(p.Descriptors, p.Descriptor)
+	}
+
 	return
 }
 
@@ -60,6 +71,8 @@ func (p *plugin) Steps() drone.Steps {
 		drone.NewStep(p.build, drone.Name("编译"), drone.Interrupt()),
 		// 注入，不依赖网络环境，不需要重试
 		drone.NewStep(p.inject, drone.Name("注入"), drone.Interrupt()),
+		// 描述文件，不依赖网络环境，不需要重试
+		drone.NewStep(p.descriptor, drone.Name("描述"), drone.Interrupt()),
 		// 复制，不依赖网络环境，不需要重试
 		drone.NewStep(p.copy, drone.Name("复制"), drone.Interrupt()),
 	}

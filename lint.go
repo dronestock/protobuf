@@ -9,13 +9,13 @@ import (
 
 type lint struct {
 	// 是否开启
-	Enabled bool `default:"true" json:"enabled"`
+	Enabled *bool `default:"true" json:"enabled"`
 	// 配置文件
 	Config string `default:".protolint.yaml" json:"config"`
 }
 
 func (p *plugin) lint() (undo bool, err error) {
-	if undo = !p.Lint.Enabled; undo {
+	if undo = !*p.Lint.Enabled; undo {
 		return
 	}
 
