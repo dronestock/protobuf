@@ -6,7 +6,7 @@ type descriptor struct {
 	// 要合并的源文件
 	Source string `json:"source"`
 	// 要合并的源文件列表
-	Sources []string `json:"sources" validate:"required_if=Source"`
+	Sources []string `json:"sources" validate:"required_without=Source"`
 	// 输出文件
 	Output string `default:"descriptor.pb" json:"output"`
 	// 选项
