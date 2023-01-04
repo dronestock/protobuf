@@ -13,13 +13,21 @@ type descriptor struct {
 	Opts []string `json:"OPTS"`
 }
 
+func (d *descriptor) enabled() bool {
+	return nil != d.Enabled && *d.Enabled
+}
+
 func (p *plugin) descriptor() (undo bool, err error) {
-	if undo = !*p.Descriptor.Enabled || 0 == len(p.Descriptors); undo {
+	if undo = 0 == len(p.Descriptors); undo {
 		return
 	}
 
 	for _, _descriptor := range p.Descriptors {
-		if err = _descriptor.build(p); nil != err {
+		if _descriptor.enabled() {
+			err = _descriptor.build(p)
+		}
+
+		if nil != err {
 			return
 		}
 	}
