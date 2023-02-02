@@ -39,6 +39,7 @@ func (t *target) out(plugin *plugin) (out []string) {
 	plugins := t.plugins(plugin)
 	switch t.Lang {
 	case langGo, langGolang, langJava:
+		out = append(out, fmt.Sprintf("--%s_out=%s", t.Lang, output))
 		for _, _plugin := range plugins {
 			out = append(out, fmt.Sprintf("--%s_out=%s", _plugin, output))
 		}
