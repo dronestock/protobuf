@@ -18,38 +18,32 @@ type target struct {
 	Opt string `json:"opt"`
 }
 
-func (t *target) opt(defaults bool) (opt []string) {
+func (t *target) opt(plugin *plugin) (opt []string) {
+	if "" == t.Opt {
+		return
+	}
+
 	opt = make([]string, 0, 1)
-	plugins := t.plugins(defaults)
-	switch t.Lang {
-	case langGo, langGolang:
-		opt = append(opt, fmt.Sprintf(`--go_opt=%s`, t.Opt))
-		for _, _plugin := range plugins {
-			opt = append(opt, fmt.Sprintf(`--go-%s_opt=%s`, _plugin, t.Opt))
-		}
-	default:
-		opt = append(opt, fmt.Sprintf(`--%s_opt=%s`, t.Lang, t.Opt))
+	plugins := t.plugins(plugin)
+	opt = append(opt, fmt.Sprintf("--%s_opt=%s", t.Lang, t.Opt))
+	for _, _plugin := range plugins {
+		opt = append(opt, fmt.Sprintf("--%s_opt=%s", _plugin, t.Opt))
 	}
 
 	return
 }
 
-func (t *target) out(defaults bool) (out []string) {
+func (t *target) out(plugin *plugin) (out []string) {
 	out = make([]string, 0, 1)
-	plugins := t.plugins(defaults)
+	output := t.output()
+	plugins := t.plugins(plugin)
 	switch t.Lang {
-	case langJava:
-		out = append(out, fmt.Sprintf(`--java_out=%s`, t.output()))
+	case langGo, langGolang, langJava:
 		for _, _plugin := range plugins {
-			out = append(out, fmt.Sprintf(`--%s-java_out=%s`, _plugin, t.output()))
-		}
-	case langGo, langGolang:
-		out = append(out, fmt.Sprintf(`--go_out=%s`, t.output()))
-		for _, _plugin := range plugins {
-			out = append(out, fmt.Sprintf(`--go-%s_out=%s`, _plugin, t.output()))
+			out = append(out, fmt.Sprintf("--%s_out=%s", _plugin, output))
 		}
 	default:
-		out = append(out, fmt.Sprintf(`--%s_out=%s:%s`, t.Lang, strings.Join(plugins, separator), t.output()))
+		out = append(out, fmt.Sprintf("--%s_out=%s:%s", t.Lang, strings.Join(plugins, separator), output))
 	}
 
 	return
@@ -72,22 +66,23 @@ func (t *target) output() (output string) {
 	return
 }
 
-func (t *target) plugins(defaults bool) (plugins []string) {
+func (t *target) plugins(plugin *plugin) (plugins []string) {
 	plugins = t.Plugins
-	if !defaults {
+	if !*plugin.Defaults {
 		return
 	}
 
 	switch t.Lang {
 	case langJava:
-		plugins = append(plugins, `grpc`)
+		plugins = append(plugins, "grpc-java", "grpc-gateway")
 	case langGo, langGogo:
-		plugins = append(plugins, `grpc`)
+		plugins = append(plugins, "go-grpc", "grpc-gateway")
 	case langDart:
-		plugins = append(plugins, `generate_kythe_info`)
+		plugins = append(plugins, "generate_kythe_info")
 	case langJs:
-		plugins = append(plugins, `binary`)
+		plugins = append(plugins, "binary")
 	}
+	plugins = append(plugins, plugin.Plugins...)
 
 	return
 }

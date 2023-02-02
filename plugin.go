@@ -23,6 +23,8 @@ type plugin struct {
 	Includes []string `default:"${INCLUDES}"`
 	// 标签列表
 	Tags []string `default:"${TAGS}"`
+	// 插件列表
+	Plugins []string `json:"plugins"`
 	// 有警告时不允许编译通过
 	FatalWarnings bool `default:"${FATAL_WARNINGS=true}"`
 
@@ -66,15 +68,15 @@ func (p *plugin) Setup() (unset bool, err error) {
 func (p *plugin) Steps() drone.Steps {
 	return drone.Steps{
 		// 纯静态检查，不需要重试
-		drone.NewStep(p.lint, drone.Name("检查"), drone.Interrupt()),
+		// drone.NewStep(newLintStep(p)).Name("检查").Interrupt().Build(),
 		// 编译，不依赖网络环境，不需要重试
-		drone.NewStep(p.build, drone.Name("编译"), drone.Interrupt()),
+		drone.NewStep(newBuildStep(p)).Name("编译").Interrupt().Build(),
 		// 注入，不依赖网络环境，不需要重试
-		drone.NewStep(p.inject, drone.Name("注入"), drone.Interrupt()),
+		drone.NewStep(newInjectStep(p)).Name("注入").Interrupt().Build(),
 		// 描述文件，不依赖网络环境，不需要重试
-		drone.NewStep(p.descriptor, drone.Name("描述"), drone.Interrupt()),
+		drone.NewStep(newDescriptorStep(p)).Name("描述").Interrupt().Build(),
 		// 复制，不依赖网络环境，不需要重试
-		drone.NewStep(p.copy, drone.Name("复制"), drone.Interrupt()),
+		drone.NewStep(newCopyStep(p)).Name("复制").Interrupt().Build(),
 	}
 }
 
@@ -92,7 +94,7 @@ func (p *plugin) Fields() gox.Fields[any] {
 
 func (p *plugin) tags() (tags []string) {
 	tags = p.Tags
-	if p.Defaults {
+	if *p.Defaults {
 		tags = append(tags, "experimental_allow_proto3_optional")
 	}
 

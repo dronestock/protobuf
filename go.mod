@@ -1,6 +1,6 @@
 module github.com/dronestock/protobuf
 
-go 1.18
+go 1.19
 
 require (
 	github.com/dronestock/drone v0.7.6
@@ -13,8 +13,8 @@ require (
 	github.com/drone/envsubst v1.0.3 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
-	github.com/go-playground/universal-translator v0.18.0 // indirect
-	github.com/go-playground/validator/v10 v10.11.1 // indirect
+	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-playground/validator/v10 v10.11.2 // indirect
 	github.com/go-resty/resty/v2 v2.7.0 // indirect
 	github.com/goexl/baozheng v0.0.1 // indirect
 	github.com/goexl/env v0.0.2 // indirect

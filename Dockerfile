@@ -17,7 +17,7 @@ FROM yoheimuta/protolint:0.42.2 AS protolint
 
 
 # 打包真正的镜像
-FROM rvolosatovs/protoc:4.0.0-rc3
+FROM rvolosatovs/protoc:4.0.0
 
 
 LABEL author="storezhang<华寅>" \
