@@ -68,7 +68,7 @@ func (p *plugin) Setup() (unset bool, err error) {
 func (p *plugin) Steps() drone.Steps {
 	return drone.Steps{
 		// 纯静态检查，不需要重试
-		// drone.NewStep(newLintStep(p)).Name("检查").Interrupt().Build(),
+		drone.NewStep(newLintStep(p)).Name("检查").Interrupt().Build(),
 		// 编译，不依赖网络环境，不需要重试
 		drone.NewStep(newBuildStep(p)).Name("编译").Interrupt().Build(),
 		// 注入，不依赖网络环境，不需要重试
