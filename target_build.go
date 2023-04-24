@@ -1,21 +1,21 @@
 package main
 
 import (
-	"fmt"
 	"path/filepath"
 
 	"github.com/goexl/gfx"
+	"github.com/goexl/gox/args"
 )
 
 func (t *target) build(plugin *plugin) (err error) {
-	args := make([]any, 0, 16)
+	ba := args.New().Build()
 
 	// 加入当前目录
 	// 防止出现错误：File does not reside within any path specified using --proto_path
 	if abs, ae := filepath.Abs(plugin.Source); nil != ae {
 		err = ae
 	} else {
-		args = append(args, `--proto_path`, abs)
+		ba.Option("proto_path", abs)
 	}
 	if nil != err {
 		return
@@ -26,7 +26,7 @@ func (t *target) build(plugin *plugin) (err error) {
 		if abs, ae := filepath.Abs(include); nil != ae {
 			err = ae
 		} else {
-			args = append(args, `--proto_path`, abs)
+			ba.Option("proto_path", abs)
 		}
 
 		if nil != err {
@@ -36,16 +36,16 @@ func (t *target) build(plugin *plugin) (err error) {
 
 	// 添加标签
 	for _, tag := range plugin.tags() {
-		args = append(args, fmt.Sprintf(`--%s`, tag))
+		ba.Flag(tag)
 	}
 
 	// 添加插件他输出目录
 	for _, out := range t.out(plugin) {
-		args = append(args, out)
+		ba.Add(out)
 	}
 	// 添加选项
 	for _, opt := range t.opt(plugin) {
-		args = append(args, opt)
+		ba.Add(opt)
 	}
 
 	// 编译
@@ -53,7 +53,7 @@ func (t *target) build(plugin *plugin) (err error) {
 		err = ge
 	} else {
 		for _, filename := range filenames {
-			if err = plugin.protoc(plugin.Source, []string{filename}, args); nil != err {
+			if err = plugin.protoc(plugin.Source, []string{filename}, ba); nil != err {
 				break
 			}
 		}

@@ -12,6 +12,8 @@ import (
 type plugin struct {
 	drone.Base
 
+	// 执行程序
+	Binary binary `default:"${BINARY}"`
 	// 源文件目录
 	Source string `default:"${SOURCE=.}"`
 	// 目标
@@ -47,7 +49,7 @@ func (p *plugin) Config() drone.Config {
 	return p
 }
 
-func (p *plugin) Setup() (unset bool, err error) {
+func (p *plugin) Setup() (err error) {
 	if nil != p.Target {
 		if nil == p.Targets {
 			p.Targets = make([]*target, 0, 1)

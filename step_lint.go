@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/goexl/gfx"
+	"github.com/goexl/gox/args"
 )
 
 type stepLint struct {
@@ -26,7 +27,13 @@ func (l *stepLint) Run(_ context.Context) (err error) {
 	if final, exists := gfx.Exists(filepath.Join(l.Source, l.Lint.Config)); exists {
 		config = final
 	}
-	err = l.Command(lintExe).Args("lint", "-fix", "-config_path", config, l.Source).Exec()
+
+	la := args.New().Long(strike).Build()
+	la.Subcommand("lint")
+	la.Flag("fix")
+	la.Option("config_path", config)
+	la.Add(l.Source)
+	_, err = l.Command(l.Binary.Lint).Args(la.Build()).Build().Exec()
 
 	return
 }
