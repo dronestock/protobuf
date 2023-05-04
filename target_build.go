@@ -52,6 +52,10 @@ func (t *target) build(plugin *plugin) (err error) {
 	if filenames, ge := gfx.All(plugin.Source, gfx.Matchable(plugin.buildable)); nil != ge {
 		err = ge
 	} else {
+		filenames = []string{
+			"home.proto",
+			"test.proto",
+		}
 		for _, filename := range filenames {
 			if err = plugin.protoc(plugin.Source, []string{filename}, ba.Clone()); nil != err {
 				break

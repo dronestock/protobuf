@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/dronestock/drone v1.0.0
 	github.com/goexl/gfx v0.1.7
-	github.com/goexl/gox v0.3.5
+	github.com/goexl/gox v0.3.6
 	github.com/goexl/simaqian v0.2.5
 )
 
@@ -36,8 +36,3 @@ require (
 	golang.org/x/sys v0.7.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 )
-
-// replace github.com/dronestock/drone => ../drone
-// replace github.com/goexl/mengpo => ../../storezhang/mengpo
-// replace github.com/storezhang/mengpo => ../../storezhang/mengpo
-// replace github.com/storezhang/gfx => ../../storezhang/gfx
