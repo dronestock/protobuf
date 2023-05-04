@@ -25,7 +25,7 @@ func (p *plugin) protoc(input string, filenames []string, builder *args.Builder)
 	}
 
 	arguments := builder.Build()
-	if _, err = p.Command(p.Binary.Protoc).Args(builder.Build()).Dir(filepath.Dir(input)).Build().Exec(); nil != err {
+	if _, err = p.Command(p.Binary.Protoc).Args(arguments).Dir(filepath.Dir(input)).Build().Exec(); nil != err {
 		p.Error("编译出错", fields.Add(field.New("builder", arguments.String())).Add(field.Error(err))...)
 	} else if p.Verbose {
 		p.Info("编译成功", fields...)
