@@ -30,7 +30,7 @@ func (d *descriptor) build(plugin *plugin) (err error) {
 	// 添加输出文件
 	ba.Option("descriptor_set_out", d.Output)
 	// 编译
-	err = plugin.protoc(plugin.Source, append([]string{d.Source}, d.Sources...), ba)
+	err = plugin.protoc(plugin.Source, append([]string{d.Source}, d.Sources...), ba.Clone())
 
 	return
 }

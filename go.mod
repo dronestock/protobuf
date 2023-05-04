@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/dronestock/drone v1.0.0
 	github.com/goexl/gfx v0.1.7
-	github.com/goexl/gox v0.3.4
+	github.com/goexl/gox v0.3.5
 	github.com/goexl/simaqian v0.2.5
 )
 
