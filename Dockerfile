@@ -10,7 +10,7 @@ RUN go install github.com/favadi/protoc-go-inject-tag@v${TAG_VERSION}
 
 
 
-FROM yoheimuta/protolint:0.49.4 AS protolint
+FROM yoheimuta/protolint:0.49.6 AS protolint
 
 
 
