@@ -6,7 +6,7 @@ toolchain go1.24.1
 
 require (
 	github.com/dronestock/drone v1.0.2
-	github.com/goexl/gfx v0.2.5
+	github.com/goexl/gfx v0.2.8
 	github.com/goexl/gox v0.3.8
 	github.com/goexl/simaqian v0.4.0
 )
@@ -14,7 +14,7 @@ require (
 require (
 	github.com/antonmedv/expr v1.12.6 // indirect
 	github.com/drone/envsubst v1.0.3 // indirect
-	github.com/fsnotify/fsnotify v1.8.0 // indirect
+	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.12.0 // indirect
