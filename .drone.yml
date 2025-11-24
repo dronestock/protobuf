@@ -55,6 +55,8 @@ steps:
     settings:
       output:
         name: protobuf
+        os: linux
+        arch: amd64
 
   - name: 发布
     image: ccr.ccs.tencentyun.com/dronestock/docker
